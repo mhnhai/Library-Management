@@ -8,11 +8,9 @@ router.route("/")
     .post(books.create)
     .delete(books.deleteAll);
 
-router.get("/filter", books.filter);
-
 router.route("/:id")
     .get(books.findOne)
     .put(books.update)
     .delete(books.delete);
-
+    
 module.exports = router;

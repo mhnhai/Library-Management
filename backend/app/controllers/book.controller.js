@@ -4,7 +4,8 @@ const BookService = require("../services/book.service");
 
 // Xử lý chức năng thêm một sach moi
 exports.create = async (req, res,next) => {
-    req.body.img = Buffer(req.body.img, 'base64');
+        // req.body.img  = new Buffer(req.body.img, 'base64');
+
     try {
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.create(req.body);
@@ -20,10 +21,17 @@ exports.findAll = async (req, res, next) =>{
     let documents = [];
     try {
         const bookService = new BookService(MongoDB.client);
-        const { name } = req.query; 
-        if (name) {
-            documents = await bookService.findByTitle(name);
-        } else {
+        const { title, author, category, language } = req.query; 
+        if (title) {
+            documents = await bookService.findByTitle(title);
+        } else if(author){
+            documents = await bookService.findByAuthor(author);       
+        } else if(category){
+            documents = await bookService.findByCategory(category);
+        } else if(language){
+            documents = await bookService.findByLanguage(language);
+        }
+        else {
             documents = await bookService.find({});
         }
     } catch (error) {
@@ -108,16 +116,4 @@ exports.deleteAll = async(req, res, next) => {
         );
     }
 };
-
-exports.filter = async (req, res, next) => {
-    // console.log(req.query);
-    const catogory = req.query.catogory;
-    try {
-        const bookService = new BookServiceService(MongoDB.client);
-        const fill = await bookService.filter(catogory);
-        return res.send(fill)
-    } catch (error) {
-        return next(new ApiError(500, 'Error updating contact'));
-    }
-}
 

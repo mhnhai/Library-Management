@@ -2,7 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const libraryBook = require("./app/routes/book.route");
 const librarySignin = require("./app/routes/signin.route");
+const libraryUpload = require("./app/routes/upload.route")
+const libraryAuthor = require('./app/routes/author.route');
+const libraryBorrow = require('./app/routes/borrow.route');
 
+const libraryPublisher= require('./app/routes/publisher.route');
 const ApiError = require("./app/api-error");
 
 const app = express();
@@ -15,7 +19,10 @@ app.get("/", (req, res) => {
 });
 app.use("/api/books",libraryBook);
 app.use("/api/signin", librarySignin);
-
+app.use("/api/upload", libraryUpload)
+app.use("/api/author", libraryAuthor)
+app.use("/api/borrow", libraryBorrow)
+app.use("/api/publisher", libraryPublisher)
 //handle 404 response
 app.use((req, res, next) => {
 	return next(new ApiError(404, "Resource not found"));

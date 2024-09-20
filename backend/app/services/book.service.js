@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-
+const upload = require("../middlewares/upload")
 class BookService {
     constructor (client) {
         this.book = client.db().collection("books");
@@ -8,14 +8,16 @@ class BookService {
     extractConactData (payload) {
         const book = {
             title: payload.title, //tieu de
+            ISBN: payload.ISBN, //ma sach
             price: payload.price, // gia tien
+            amount: payload.amount, // so quyen
             author: payload.author, //tac gia
             publishDate: payload.publishDate, //nam xuat ban
             publisher: payload.publisher, // nha xuat ban
             category: payload.category, //the loai
-            language: payload.language,// ngon ngu
             pages: payload.pages, // so trang
-            
+            imageUrl: payload.imageUrl, // bia sach
+            description: payload.description
         };
         // Remove undefined fields
         Object.keys(book).forEach(
@@ -28,20 +30,34 @@ class BookService {
         const book = this.extractConactData(payload);
         const result = await this.book.findOneAndUpdate(
             book,
-        {$set: {} },
-        { returnDocument: 'after', upsert: true }
+            {$set: {} },
+            { returnDocument: 'after', upsert: true }
         );
         return result;
     }
-    
+
     async find(filter){
         const cursor = await this.book.find(filter);
         return await cursor.toArray();
     }
-
     async findByTitle(title){
         return await this.find({
             title: { $regex: new RegExp(title), $options: 'i' },
+        });
+    }
+    async findByAuthor(author){
+        return await this.find({
+            author: { $regex: new RegExp(author), $options: 'i' },
+        });
+    }
+    async findByCategory(category){
+        return await this.find({
+            category: { $regex: new RegExp(category), $options: 'i' },
+        });
+    }
+    async findByLanguage(language){
+        return await this.find({
+            language: { $regex: new RegExp(language), $options: 'i' },
         });
     }
 
@@ -75,11 +91,6 @@ class BookService {
     async deleteAll(){
         const result = await this.book.deleteMany({});
         return result.deletedCount;
-    }
-
-    async filter(type) {
-        const result = await this.product.find({type})
-        return await result.toArray();
     }
 }
 
