@@ -111,45 +111,49 @@ export default {
                 return false;
             }
         },
-      async addToBorrow() {
-        try {
-          const hasCart = await this.checkCart(this.account);
-          if (hasCart) {
-            // Existing cart logic
-            let foundIndex = await this.findIndexCart(this.account);
-            this.amount = this.borrowedList[foundIndex].amount;
-            if (this.amount === 3) {
-              alert("Bạn chỉ có thể thêm tối đa 3 quyển sách vào giỏ hàng.");
-            } else {
-              const hasBookInCart = await this.checkBookInCart(this.book);
-              if (!hasBookInCart) {
-                let object = this.book;
-                this.borrowedList[foundIndex].book.push(object);
-                this.borrowedList[foundIndex].amount += 1;
-                await BorrowService.update(this.borrowedList[foundIndex]._id, this.borrowedList[foundIndex]);
-                alert("Đã thêm sách vào giỏ.");
-                window.location.reload();
-              } else {
-                alert("Đã có sẵn sách trong giỏ hàng của bạn.");
+        async addToBorrow() {
+            try {
+                const hasCart = await this.checkCart(this.account);
+                console.log(hasCart)
+                if (hasCart) // co gio hang chua xong
+                {
+                    let foundIndex = await this.findIndexCart(this.account);
+                    this.amount = this.borrowedList[foundIndex].amount;
+                    if (this.amount === 3) {
+                        alert("Bạn chỉ có thể thêm tối đa 3 quyển sách vào giỏ hàng.");
+                    }
+                    else {
+                        const hasBookInCart = await this.checkBookInCart(this.book);
+                        console.log(hasBookInCart)
+                        if (!hasBookInCart) { // chua co sach
+                            let object = this.book;
+                            this.borrowedList[foundIndex].book.push(object);
+                            this.borrowedList[foundIndex].amount += 1;
+                            window.location.reload();
+                        }
+                        else { // co sach
+                            alert("Đã có sẳn sách trong giỏ hàng của bạn.")
+                            // let foundBookIndex = this.findIndexBook(foundIndex, this.book);
+                            // console.log(foundBookIndex)
+                            // this.borrowedList[foundIndex].bookList[foundBookIndex].amount += this.counter;
+                            // console.log(this.borrowedList[foundIndex].bookList[foundBookIndex].amount)
+                        }
+                        await BorrowService.update(this.borrowedList[foundIndex]._id, this.borrowedList[foundIndex]);
+                    }
+                }
+                else{ // chua co gio hang
+                  let newCart = {
+                    book: [],
+                    account: this.account,
+                    status: "adding",
+                    amount: 0
+                  };
+                  this.borrowedBook = await BorrowService.create(newCart)
               }
+            } catch (error) {
+                console.log("loi")
             }
-          } else {
-            // Tao gio hang moi neu chua co sach
-            let newCart = {
-              book: [this.book], // Them sach vao gio hang
-              account: this.account,
-              status: "adding",
-              amount: 1
-            };
-            await BorrowService.create(newCart);
-            alert("Đã thêm sách vào giỏ.");
-            window.location.reload();
-          }
-        } catch (error) {
-          console.error("Lỗi khi thêm sách vào giỏ hàng:", error);
-          alert("Đã xảy ra lỗi khi thêm sách vào giỏ hàng. Vui lòng thử lại sau.");
         }
-      }
     },
     created() {
         this.getBook(this.id);

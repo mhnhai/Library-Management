@@ -7,7 +7,11 @@ class BorrowService {
     extractConactData (payload) {
         const borrow = {
             book: payload.book, //sach muon
-            user: payload.user, //nguoi muon
+            account: payload.account, //nguoi muon
+            status: payload.status, // tinh trang muon (dang them vao gio hang: adding, da xong gio hang-> den muon sach: added ,dang muon: borrowing, da tra: borrowed)
+            amount: payload.amount, // so luong sach trong
+            borrowed_date: payload.borrowed_date, //ngay muon sach
+            return_date: payload.return_date,
         };
         // Remove undefined fields
         Object.keys(borrow).forEach(
