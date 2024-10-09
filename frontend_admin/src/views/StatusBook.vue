@@ -41,7 +41,7 @@
 <script>
 import BookCard from "@/components/BookCard.vue";
 import InputSearch from "@/components/InputSearch.vue";
-import BookList from "@/components/BookListAdmin.vue";
+import BookList from "@/views/BookList.vue";
 import BookService from "@/services/book.service";
 export default {
     components: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-scroll" style="max-width: 100vh; max-height: 40vh; ">
+  <div class="overflow-y-scroll" style="max-height: 100vh; ">
     <div v-for="(cart, index) in reversedCarts" :key="cart._id" class="cart">
       <h3>Account: {{ cart.account.username }}</h3>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#cartModal' + index">

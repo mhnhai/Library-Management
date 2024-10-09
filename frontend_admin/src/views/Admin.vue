@@ -4,47 +4,14 @@
               <InputSearch v-model="searchText" />
         </div>
         <div class="column-gap-md-3">
-            <BookList v-if="filteredBooksCount > 0" :books="filteredBooks"
-                v-model:activeIndex="activeIndex" />
-            <p v-else>Không có liên hệ nào.</p>
-            <div class="mt-3 justify-content-around align-items-center">
-                <button class="btn btn-sm btn-primary m-3" @click="refreshList()">
-                    <i class="fas fa-redo"></i> Làm mới
-                </button>
-                <button class="btn btn-sm btn-success m-3" @click="goToAddBook">
-                    <i class="fas fa-plus"></i> Thêm mới
-                </button>
-                <button class="btn btn-sm btn-danger m-3" @click="removeAllBooks">
-                    <i class="fas fa-trash"></i> Xóa tất cả
-                </button>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div v-if="activeBook">
-                <h4>
-                    Chi tiết sách
-                    <i class="fas fa-book"></i>
-                </h4>
-                <BookCard :book="activeBook" />
-                <router-link :to="{
-                    name: 'book.edit',
-                    params: { id: activeBook._id },
-                }">
-                    <span class="mt-2 badge text-bg-light">
-                        <i class="fas fa-edit"></i> Hiệu chỉnh</span>
-                </router-link>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#bookModal' + index">
-                Launch demo modal
-              </button>
-              <BookModal :book="activeBook" :id="'bookModal' + index" @cart-updated="updateBook"/>
-            </div>
+            <BookList />
         </div>
     </div>
 </template>
 <script>
 import BookCard from "@/components/BookCard.vue";
 import InputSearch from "@/components/InputSearch.vue";
-import BookList from "@/components/BookListAdmin.vue";
+import BookList from "@/views/BookList.vue";
 import BookService from "@/services/book.service";
 import BookModal from "@/components/BookModal.vue";
 import CartModal from "@/components/CartModal.vue";

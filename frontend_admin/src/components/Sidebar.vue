@@ -7,7 +7,7 @@
       <hr>
       <div class="navbar-nav flex-column mb-auto">
         <div class="nav-item">
-          <router-link :to="{ name: 'admin' }" class="nav-link" :class="{ 'active': isActive('admin') }">
+          <router-link :to="{ name: 'book' }" class="nav-link" :class="{ 'active': isActive('book') }">
             <i class="fa-solid fa-book-bookmark"></i>
             <strong> Sách</strong>
           </router-link>
