@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" :id="id" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true"  ref="accountModal">
+  <div class="modal fade" :id="id" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -82,11 +82,19 @@ export default {
     return {
       accountLocal: { ...this.account },
       accountFormSchema,
+      accountList: [],
     };
   },
   methods: {
     async submitAccount() {
       try {
+        this.accountList = await AccountService.getAll();
+        const found = this.accountList.find(acc => acc.username === this.accountLocal.username);
+
+        if (found && (!this.accountLocal._id || found._id !== this.accountLocal._id)) {
+          alert('Tên tài khoản đã tồn tại, vui lòng chọn tên khác.');
+          return;
+        }
         if (this.accountLocal._id) {
           await AccountService.update(this.accountLocal._id, this.accountLocal);
           alert('Tài khoản đã được cập nhật thành công.');
@@ -94,7 +102,8 @@ export default {
           await AccountService.create(this.accountLocal);
           alert('Tài khoản mới đã được thêm thành công.');
         }
-        this.$emit('account-updated', this.accountLocal);
+        // this.$emit('account-updated', this.accountLocal);
+        window.location.reload();
       } catch (error) {
         console.log(error);
       }
@@ -104,9 +113,8 @@ export default {
         try {
           await AccountService.delete(this.accountLocal._id);
           alert('Tài khoản đã được xóa thành công.');
-          this.$emit('account-deleted', this.accountLocal);
+          // this.$emit('account-deleted', this.accountLocal);
           window.location.reload();
-
         } catch (error) {
           console.log(error);
         }

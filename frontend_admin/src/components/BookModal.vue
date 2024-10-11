@@ -126,7 +126,8 @@ export default {
           await BookService.create(this.bookLocal);
           alert('Sách mới đã được thêm thành công.');
         }
-        this.$emit('book-updated', this.bookLocal);
+        // this.$emit('book-updated', this.bookLocal);
+        window.location.reload();
       } catch (error) {
         console.log(error);
       }
@@ -137,8 +138,8 @@ export default {
           await BookService.delete(this.bookLocal._id);
           alert('Sách đã được xóa thành công.');
           //window.location.reload();
-          this.$emit('book-deleted', this.bookLocal);
-
+          // this.$emit('book-deleted', this.bookLocal);
+          window.location.reload();
         } catch (error) {
           console.log(error);
         }

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row mb-3">
       <div class="col">
-        <h2>Danh sách</h2>
+        <h2>Danh sách sách</h2>
       </div>
     </div>
     <div class="row mb-3">

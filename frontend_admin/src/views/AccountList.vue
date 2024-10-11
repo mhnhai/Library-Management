@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row mb-3">
       <div class="col">
-        <h2>Danh sách</h2>
+        <h2>Danh sách tài khoản</h2>
       </div>
     </div>
     <div class="row mb-3">
@@ -69,7 +69,6 @@ export default {
       const index = this.accounts.indexOf(deleteAccount);
       this.accounts.splice(index, 1);
       this.accounts = [...this.accounts];
-
 
     },
     async removeAllAccounts() {
