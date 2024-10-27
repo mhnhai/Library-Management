@@ -22,7 +22,7 @@ export default {
 
 .page {
   max-width: 1000px;
-  min-height: 100vh;
+  min-height: 175vh;
   margin: auto;
   font-family: Bitter, serif;
 }

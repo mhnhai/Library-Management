@@ -1,5 +1,4 @@
 const { ObjectId } = require("mongodb");
-const upload = require("../middlewares/upload")
 class BookService {
     constructor (client) {
         this.book = client.db().collection("books");

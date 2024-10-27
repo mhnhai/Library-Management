@@ -8,7 +8,7 @@
     <div class="row mb-3">
       <div class="col-auto">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
-          Thêm sách mới
+          Thêm tài khoản mới
         </button>
         <!-- Modal for adding a new account -->
         <AccountModal :account="{}" id="addAccountModal" @account-updated="addAccount"/>

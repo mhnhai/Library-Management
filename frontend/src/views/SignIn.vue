@@ -1,20 +1,20 @@
 <template>
   <div v-if="account" class="page">
     <h4 class="d-flex justify-content-center">Đăng nhập</h4>
-    <SignInForm :account="account" @submit:account="loginAccount" />
+    <SignInForm :account="account" @submit:account="loginAccount"/>
     <p>{{ message }}</p>
     <div class="nav-item d-flex justify-content-center">
-      <param>Bạn chưa có tài khoản?&nbsp;
-      <router-link :to="{ name: 'signup' }">
-        Tạo tài khoản ngay
-      </router-link>
-      </param>
+      <p>Bạn chưa có tài khoản?&nbsp;
+      <router-link :to="{ name: 'signup' }"> Tạo tài khoản ngay </router-link>
+      </p>
     </div>
   </div>
 </template>
+
 <script>
+import AuthService from "@/services/auth.service.js";
 import SignInForm from "@/components/SignInForm.vue";
-import SignInService from "@/services/signin.service";
+
 export default {
   components: {
     SignInForm,
@@ -30,35 +30,24 @@ export default {
     };
   },
   methods: {
-    async loginAccount(data) {
-      try {
-        this.accounts = await SignInService.getAll();
+        async loginAccount(data) {
+          try {
+            // Gọi hàm login từ AuthService để kiểm tra đăng nhập
+            const account = await AuthService.login(data);
 
-        const flag = this.accounts.find(
-          acc => acc.username === data.username && acc.password === data.password
-        );
-        if (flag == null) this.message = "Đăng nhập thất bại, sai tài khoản hoặc mật khẩu";
-        else {
-          localStorage.setItem("account", JSON.stringify(flag));
-          this.message = "Đăng nhập thành công";
-          if(flag.role == "user")
-              // this.$router.push({ name: "client" });
-            window.location.href = "/"
-          else if(flag.role == "admin")
-            // this.$router.push({ name: "client" });
-
-          window.location.href = "/admin"
-        }
-
-
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  }
-}
+            // Đăng nhập thành công, lưu thông báo và điều hướng dựa trên vai trò
+            this.message = "Đăng nhập thành công";
+            this.$router.push({ name: "client" });
+            this.$emit('login', account);
+          } catch (error) {
+            this.message = error.message || "Có lỗi xảy ra khi đăng nhập, vui lòng thử lại";
+          }
+        },
+      },
+};
 </script>
-<style>
+
+<style scoped>
 .page {
   max-width: 400px;
   min-height: 100vh;

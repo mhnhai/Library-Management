@@ -1,13 +1,21 @@
 <template>
-  <div class="overflow-y-scroll" style="max-height: 100vh; ">
-    <div v-for="(cart, index) in reversedCarts" :key="cart._id" class="cart">
-      <h3>Account: {{ cart.account.username }}</h3>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#cartModal' + index">
-        Launch demo modal
-      </button>
-      <CartModal :cart="cart" :id="'cartModal' + index" @cart-updated="updateCart"/>
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col">
+        <h2>Danh sách giỏ mượn</h2>
+      </div>
+    </div>
+    <div class="overflow-y-scroll border border-black" style="max-height: 85vh; ">
+      <div v-for="(cart, index) in reversedCarts" :key="cart._id" class="cart">
+        <h3>Account: {{ cart.account.username }}</h3>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#cartModal' + index">
+          Launch demo modal
+        </button>
+        <CartModal :cart="cart" :id="'cartModal' + index" @cart-updated="updateCart"/>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>

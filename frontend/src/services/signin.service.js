@@ -11,7 +11,6 @@ class SignInService {
         return (await this.api.put(`/${id}`, data)).data;
     }
 
-
     async getAll() {
         return (await this.api.get('/')).data;
     }
