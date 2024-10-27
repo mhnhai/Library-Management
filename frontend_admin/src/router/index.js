@@ -6,6 +6,7 @@ import Login from "@/views/Login.vue"
 import CartList from "@/views/CartList.vue";
 import AccountList from "@/views/AccountList.vue";
 const routes = [
+
     {
         path: '/',
         name: 'admin',
