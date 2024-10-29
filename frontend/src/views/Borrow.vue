@@ -6,7 +6,7 @@
         <hr>
       </div>
       <div class="container">
-        <div class="p-2" v-for="(book, index) in books" :key="book._id">
+        <div class="p-2" v-for="(book, index) in books" :key="index">
           <div class="row pt-3">
             <img class="col-3" v-if="book.imageUrl" :src="book.imageUrl" style="width: 150px; height: 180px;" />
             <div class="col-7">
@@ -27,65 +27,73 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
+
 <script>
 import BorrowService from "@/services/borrow.service";
+
 export default {
-  // Đoạn mã xử lý đầy đủ sẽ trình bày bên dưới
   data() {
     return {
-      indexCart: -1,
       books: [],
-      searchText: "",
-      borrowedList: [],
       account: null,
-      book: null,
     };
   },
   methods: {
-    async getBorrow() {
-      try {
-        this.borrowedList = await BorrowService.getAll();
-        await this.findIndexCart(this.account);
-        this.books = this.borrowedList[this.indexCart].book;
-      } catch (error) {
-        // Chuyển sang trang NotFound đồng thời giữ cho URL không đổi
+    loadBorrowCart() {
+      const borrowCartData = localStorage.getItem('borrowCart');
+      if (borrowCartData) {
+        this.books = JSON.parse(borrowCartData);
       }
     },
-    async deleteBook(index) {
-      this.borrowedList[this.indexCart].book.splice(index,1);
-      this.borrowedList[this.indexCart].amount -=1;
-      await BorrowService.update(this.borrowedList[this.indexCart]._id, this.borrowedList[this.indexCart]);
-      window.location.reload();
+    deleteBook(index) {
+      this.books.splice(index, 1);
+      // Cập nhật lại localStorage sau khi xóa
+      localStorage.setItem('borrowCart', JSON.stringify(this.books));
     },
-    async findIndexCart(account) {
+    async borrow() {
       try {
-        this.indexCart = this.borrowedList.findIndex(cart => (cart.account._id === account._id && cart.status === "adding"));
-      } catch (error) {
-        console.error("Error in findIndexCart:", error);
-        return false;
-      }
-    },
-    async borrow(){
-      this.borrowedList[this.indexCart].status = "added";
-      await BorrowService.update(this.borrowedList[this.indexCart]._id, this.borrowedList[this.indexCart]);
-      window.location.reload();
-    }
+        // Tạo đối tượng mượn sách mới
+        const borrowData = {
+          account: this.account._id,
+          book: this.books,
+          status: "added",
+          amount: this.books.length
+        };
 
+        // Gọi API để tạo phiếu mượn
+        await BorrowService.create(borrowData);
+
+        // Xóa giỏ mượn trong localStorage
+        localStorage.removeItem('borrowCart');
+
+        // Reset books array
+        this.books = [];
+
+        // Có thể thêm thông báo thành công ở đây
+        alert("Đặt mượn thành công!");
+
+      } catch (error) {
+        console.error("Error while borrowing:", error);
+        alert("Có lỗi xảy ra khi đặt mượn!");
+      }
+    }
   },
   created() {
-    this.getBorrow();
+    // Load account từ localStorage
     const accountData = localStorage.getItem("account");
     if (accountData) {
-      this.account = JSON.parse(accountData); // Chuyển đổi chuỗi JSON thành đối tượng
+      this.account = JSON.parse(accountData);
     }
+
+    // Load giỏ mượn từ localStorage
+    this.loadBorrowCart();
   }
 };
 </script>
+
 <style scoped>
 .page {
   text-align: left;
