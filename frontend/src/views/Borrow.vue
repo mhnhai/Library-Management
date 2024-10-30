@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-center p-3">
-          <button v-if="books.length>0" class="btn btn-primary" @click="borrow()">
+          <button v-if="cart.amount>0" class="btn btn-primary" @click="borrow()">
             Đặt mượn ngay
           </button>
           <div v-else>
@@ -37,7 +37,8 @@ import BorrowService from "@/services/borrow.service";
 export default {
   data() {
     return {
-      books: [],
+      cart: [],
+      books:[],
       account: null,
     };
   },
@@ -45,22 +46,27 @@ export default {
     loadBorrowCart() {
       const borrowCartData = localStorage.getItem('borrowCart');
       if (borrowCartData) {
-        this.books = JSON.parse(borrowCartData);
+        this.cart = JSON.parse(borrowCartData);
+        this.books = this.cart.book;
       }
     },
     deleteBook(index) {
-      this.books.splice(index, 1);
+      // Loại bỏ sách tại chỉ mục index và tạo mảng mới
+      this.cart.book = this.books.filter((_, i) => i !== index);
+      this.books = this.cart.books;
+
       // Cập nhật lại localStorage sau khi xóa
-      localStorage.setItem('borrowCart', JSON.stringify(this.books));
+      localStorage.setItem('borrowCart', JSON.stringify(this.cart));
     },
+
     async borrow() {
       try {
         // Tạo đối tượng mượn sách mới
         const borrowData = {
-          account: this.account._id,
-          book: this.books,
+          account: this.account,
+          book: this.cart.book,
           status: "added",
-          amount: this.books.length
+          amount: this.cart.amount
         };
 
         // Gọi API để tạo phiếu mượn
@@ -69,10 +75,10 @@ export default {
         // Xóa giỏ mượn trong localStorage
         localStorage.removeItem('borrowCart');
 
-        // Reset books array
+        // Reset trạng thái của giỏ mượn và danh sách sách
         this.books = [];
+        this.cart = { book: [], amount: 0 };
 
-        // Có thể thêm thông báo thành công ở đây
         alert("Đặt mượn thành công!");
 
       } catch (error) {
@@ -80,6 +86,8 @@ export default {
         alert("Có lỗi xảy ra khi đặt mượn!");
       }
     }
+
+
   },
   created() {
     // Load account từ localStorage

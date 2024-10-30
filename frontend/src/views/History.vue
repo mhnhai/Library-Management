@@ -1,75 +1,94 @@
 <template>
   <div v-if="account" class="page">
     <h4>Lịch sử mượn sách</h4>
+    <!-- Dropdown chọn trạng thái để lọc giỏ hàng -->
+    <div class="d-flex align-items-center mb-4">
+      <label for="statusFilter" class="me-2">Lọc theo trạng thái:</label>
+      <select id="statusFilter" v-model="filterStatus" class="form-select w-auto">
+        <option value="all">Tất cả</option>
+        <option value="added">Đã thêm vào giỏ</option>
+        <option value="borrowing">Đang mượn</option>
+        <option value="borrowed">Đã mượn</option>
+      </select>
+    </div>
+
     <div class="container container-fluid">
-      <div class="row p-2" v-for="(book, index) in books" :key="books._id">
-        <div class="row">
-          <div class="row">
-            <img class="col-3" v-if="book.imageUrl" :src="book.imageUrl" style="width: 150px; height: 180px;" />
-            <div class="col-3">
-              <p class="col-md-6 fw-bold">{{ book.title }}</p>
-            </div>
-          </div>
+      <!-- Danh sách giỏ hàng sau khi áp dụng bộ lọc -->
+      <div v-for="(cart, index) in filteredCarts" :key="cart._id" class="row mb-4">
+        <div class="col-8">
+          <h5>{{ cart.book[0]?.title }}</h5>
+          <p>Trạng thái: {{ getStatusLabel(cart.status) }}</p>
         </div>
-      </div>
-      <div class="d-flex justify-content-center p-3">
-        <p v-if="books.length<0" class="p-3">
-          Bạn chưa mượn sách nào cả.
-        </p>
-        <div v-else>
+        <div class="col-4 text-end">
+          <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#CartDetailModal' + index">Chi tiết giỏ hàng</button>
+
+          <!-- Modal chi tiết giỏ hàng -->
+          <CartDetailModal :cart="cart" :id="'CartDetailModal' + index" />
+
         </div>
       </div>
     </div>
-    <p>{{ message }}</p>
+
   </div>
 </template>
+
 <script>
+import CartDetailModal from "@/components/CartDetailModal.vue";
 import BorrowService from "@/services/borrow.service";
+
 export default {
+  components: {
+    CartDetailModal,
+  },
   data() {
     return {
-      indexCart: -1,
-      books: [],
-      searchText: "",
-      borrowedList: [],
       account: null,
-      book: null,
-      carts: [],
+      borrowedList: [],
+      filterStatus: "all", // Trạng thái lọc mặc định là "all" (tất cả)
     };
+  },
+  computed: {
+    filteredCarts() {
+      // Lọc danh sách giỏ hàng dựa trên filterStatus
+      if (this.filterStatus === "all") {
+        return this.borrowedList;
+      }
+      return this.borrowedList.filter(cart => cart.status === this.filterStatus);
+    },
   },
   methods: {
     async getAllBorrow() {
       try {
         this.borrowedList = await BorrowService.getAll();
-        // Lọc các đối tượng có account.id trùng với id của tài khoản hiện tại
-        const userId = this.account._id; // Lấy id của account hiện tại từ localStorage
-        // Lọc các sách dựa trên account._id
-        for (let i = 0; i < this.borrowedList.length; i++) {
-          if(this.borrowedList[i].account._id === userId && this.borrowedList[i].status === "added") {
-            for (let j = 0; j < this.borrowedList[i].amount; j++) {
-              this.books.push(this.borrowedList[i].book[i]);
-            }
-          }
-        }
+        const userId = this.account._id;
+        // Lọc các giỏ hàng thuộc về tài khoản hiện tại
+        this.borrowedList = this.borrowedList.filter(cart => cart.account._id === userId);
       } catch (error) {
-        // Chuyển sang trang NotFound đồng thời giữ cho URL không đổi
-        this.$router.push({
-          name: "notfound",
-          params: {
-            pathMatch: this.$route.path.split("/").slice(1)
-          },
-          query: this.$route.query,
-          hash: this.$route.hash,
-        });
+        console.error("Lỗi khi lấy danh sách mượn:", error);
+        this.$router.push({name: "notfound"});
       }
+    },
+    getStatusLabel(status) {
+      const statusLabels = {
+        added: "Đã thêm vào giỏ",
+        borrowing: "Đang mượn",
+        borrowed: "Đã mượn",
+      };
+      return statusLabels[status] || status;
     },
   },
   created() {
-    this.getAllBorrow();
     const accountData = localStorage.getItem("account");
     if (accountData) {
-      this.account = JSON.parse(accountData); // Chuyển đổi chuỗi JSON thành đối tượng
+      this.account = JSON.parse(accountData);
+      this.getAllBorrow();
     }
-  }
+  },
 };
 </script>
+
+<style scoped>
+.page {
+  max-width: 100%;
+}
+</style>

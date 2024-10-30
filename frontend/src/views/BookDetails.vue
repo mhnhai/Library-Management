@@ -53,8 +53,16 @@ export default {
 
     getCartFromStorage() {
       const cartData = localStorage.getItem('borrowCart');
-      return cartData ? JSON.parse(cartData) : null;
+      if (!cartData) return null;
+
+      try {
+        return JSON.parse(cartData);
+      } catch (error) {
+        console.error("Error parsing borrowCart from localStorage:", error);
+        return null;
+      }
     },
+
 
     saveCartToStorage(cart) {
       localStorage.setItem('borrowCart', JSON.stringify(cart));
@@ -67,17 +75,19 @@ export default {
           return;
         }
 
-
+        // Lấy giỏ hàng từ localStorage, nếu chưa có thì tạo mới giỏ hàng
         let cart = this.getCartFromStorage();
-        // Nếu chưa có giỏ hàng trong localStorage, tạo mới
         if (!cart) {
           cart = {
-            book: [],
+            book: [],          // Đảm bảo book luôn là một mảng rỗng khi khởi tạo
             account: this.account,
             status: "adding",
             amount: 0
           };
         }
+
+        // Đảm bảo `cart.book` tồn tại và là một mảng
+        cart.book = cart.book || [];
 
         // Kiểm tra số lượng sách trong giỏ
         if (cart.amount >= 3) {
@@ -91,6 +101,7 @@ export default {
           alert("Đã có sẵn sách trong giỏ hàng của bạn.");
           return;
         }
+
         // Thêm sách vào giỏ
         cart.book.push(this.book);
         cart.amount += 1;
@@ -101,13 +112,14 @@ export default {
         alert("Đã thêm sách vào giỏ.");
 
         // Emit event để cập nhật component giỏ hàng (nếu cần)
-        this.$emit('cart-updated');
+        // this.$emit('cart-updated');
 
       } catch (error) {
         console.error("Lỗi khi thêm sách vào giỏ hàng:", error);
         alert("Đã xảy ra lỗi khi thêm sách vào giỏ hàng. Vui lòng thử lại sau.");
       }
     }
+
   },
   created() {
     this.getBook(this.id);
