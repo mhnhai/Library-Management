@@ -5,6 +5,7 @@ import BookList from "@/views/BookList.vue";
 import Login from "@/views/Login.vue"
 import CartList from "@/views/CartList.vue";
 import AccountList from "@/views/AccountList.vue";
+import PublisherList from "@/views/PublisherList.vue";
 const routes = [
 
     {
@@ -23,7 +24,12 @@ const routes = [
         name: "book",
         component: BookList,
         meta: { requiresAuth: true},
-
+    },
+    {
+        path: "/publisher",
+        name: "publisher",
+        component: PublisherList,
+        meta: { requiresAuth: true},
     },
     {
         path: "/cart",

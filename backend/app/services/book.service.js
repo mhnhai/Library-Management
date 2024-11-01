@@ -7,7 +7,6 @@ class BookService {
     extractConactData (payload) {
         const book = {
             title: payload.title, //tieu de
-            ISBN: payload.ISBN, //ma sach
             price: payload.price, // gia tien
             amount: payload.amount, // so quyen
             author: payload.author, //tac gia

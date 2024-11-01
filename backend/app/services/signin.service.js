@@ -10,6 +10,11 @@ class SigninService {
             username: payload.username,
             password: payload.password,
             email: payload.email,
+            fullname: payload.fullname,
+            birthdate: payload.birthdate,
+            gender: payload.gender,
+            address: payload.address,
+            phone: payload.phone,
             role: payload.role, // admin, user
         };
         // Remove undefined fields

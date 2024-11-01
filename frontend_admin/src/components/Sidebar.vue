@@ -12,6 +12,12 @@
           </router-link>
         </div>
         <div class="nav-item">
+          <router-link :to="{ name: 'publisher' }" class="nav-link" :class="{ 'active': isActive('publisher') }">
+            <i class="fa-regular fa-user"></i>
+            <strong> Nhà xuất bản</strong>
+          </router-link>
+        </div>
+        <div class="nav-item">
           <router-link :to="{ name: 'cart' }" class="nav-link" :class="{ 'active': isActive('cart') }">
             <i class="fa-solid fa-cart-shopping"></i>
             <strong> Giỏ hàng</strong>
@@ -23,6 +29,7 @@
             <strong> Tài khoản</strong>
           </router-link>
         </div>
+
         </div>
         <hr>
         <div class="nav-item" v-if="account">

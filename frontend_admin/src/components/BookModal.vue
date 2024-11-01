@@ -23,8 +23,11 @@
             <!-- publisher, publishDate -->
             <div class="col-md-8">
               <label for="publisher" class="form-label">Nhà xuất bản</label>
-              <Field name="publisher" type="text" class="form-control" v-model="bookLocal.publisher" />
-              <ErrorMessage name="publisher" class="text-danger" />
+              <select name="publisher" class="form-select" v-model="bookLocal.publisher">
+                <option class="list-group-item" v-for="(publisher) in publishers" :value="publisher._id">
+                  {{ publisher.name }}
+                </option>
+              </select>
             </div>
             <div class="col-md-4">
               <label for="publishDate" class="form-label">Năm xuất bản</label>
@@ -41,9 +44,9 @@
             <div class="col-md-4">
               <label for="category" class="form-label">Thể loại</label>
               <select name="category" class="form-select" v-model="bookLocal.category">
-                <option>Khoa học</option>
-                <option>Trinh thám</option>
-                <option>...</option>
+                <option>a</option>
+                <option>b</option>
+                <option>c</option>
               </select>
             </div>
             <div class="col-md-4">
@@ -81,6 +84,7 @@
 import * as yup from "yup";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import BookService from "@/services/book.service.js";
+import PublisherService from "@/services/publisher.service.js";
 
 export default {
   components: {
@@ -101,7 +105,6 @@ export default {
       author: yup.string().required("Tác giả không được để trống.")
           .min(2, "Tên tác giả phải ít nhất 2 ký tự.")
           .max(50, "Tên tác giả có nhiều nhất 50 ký tự."),
-      publisher: yup.string().required("Nhà xuất bản không được để trống."),
       publishDate: yup.number().required("Năm xuất bản không được để trống.")
           .min(1800, "Năm xuất bản không hợp lệ.")
           .max(new Date().getFullYear(), "Năm xuất bản không được vượt quá năm hiện tại."),
@@ -114,11 +117,22 @@ export default {
     return {
       bookLocal: { ...this.book },
       bookFormSchema,
+      publishers: [],
+
     };
   },
   methods: {
+    async getPublishers() {
+      try {
+        this.publishers = await PublisherService.getAll();
+      } catch (error) {
+        console.error("Error fetching publishers:", error);
+        // Handle error appropriately
+      }
+    },
     async submitBook() {
       try {
+        console.log(1+1)
         if (this.bookLocal._id) {
           await BookService.update(this.bookLocal._id, this.bookLocal);
           alert('Sách đã được cập nhật thành công.');
@@ -126,8 +140,8 @@ export default {
           await BookService.create(this.bookLocal);
           alert('Sách mới đã được thêm thành công.');
         }
-        // this.$emit('book-updated', this.bookLocal);
-        window.location.reload();
+        this.$emit('submit:book', this.bookLocal);
+        // window.location.reload();
       } catch (error) {
         console.log(error);
       }
@@ -138,8 +152,8 @@ export default {
           await BookService.delete(this.bookLocal._id);
           alert('Sách đã được xóa thành công.');
           //window.location.reload();
-          // this.$emit('book-deleted', this.bookLocal);
-          window.location.reload();
+          this.$emit('delete:book', this.bookLocal);
+          // window.location.reload();
         } catch (error) {
           console.log(error);
         }
@@ -167,5 +181,8 @@ export default {
       }
     }
   },
+  created() {
+    this.getPublishers();
+  }
 };
 </script>

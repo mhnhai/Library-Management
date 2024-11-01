@@ -8,6 +8,7 @@ class PublisherService {
     extractConactData (payload) {
         const publisher = {
             name: payload.name,
+            address: payload.address,
         };
         // Remove undefined fields
         Object.keys(publisher).forEach(

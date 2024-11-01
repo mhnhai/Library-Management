@@ -11,7 +11,7 @@
           Thêm sách mới
         </button>
         <!-- Modal for adding a new book -->
-        <BookModal :book="{}" id="addBookModal" @book-updated="addBook"/>
+        <BookModal :book="{}" id="addBookModal" @submit:book="addBook"/>
       </div>
       <div class="col-auto">
         <button class="btn btn-danger" @click="removeAllBooks">
@@ -25,7 +25,11 @@
         <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#bookModal' + index">
           Chỉnh sửa
         </button>
-        <BookModal :book="book" :id="'bookModal' + index" @book-updated="updateBook"  @book-deleted="deleteBook"/>
+        <BookModal
+            :book="book"
+            :id="'bookModal' + index"
+            @submit:book="updateBook"
+            @delete:book="deleteBook"/>
       </li>
     </ul>
   </div>
