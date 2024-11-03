@@ -21,26 +21,11 @@
 
       <ErrorMessage name="email" class="error-feedback" />
     </div>
-    <div v-if="!accountLocal._id" class="form-group">
-
-      <label for="password">Mật khẩu</label>
-
-      <Field name="password" type="password" class="form-control" v-model="accountLocal.password" />
-
-      <ErrorMessage name="password" class="error-feedback" />
-    </div>
-    <div v-if="!accountLocal._id" class="form-group">
-      <label for="password">Nhập lại mật khẩu</label>
-
-      <Field name="password2" type="password" class="form-control" />
-
-      <ErrorMessage name="password2" class="error-feedback" />
-    </div>
     <div class="form-group">
       <label for="gender">Giới tính</label>
       <div class="col-md-4">
         <select name="gender" class="form-select" v-model="accountLocal.gender">
-          <option value="male" selected>Nam</option>
+          <option value="male">Nam</option>
           <option value="female">Nữ</option>
         </select>
       </div>
@@ -95,23 +80,15 @@ export default {
     const accountFormSchema = yup.object().shape({
       fullname: yup.string().required("Nhập họ và tên."),
       username: yup
-        .string()
-        .required("Nhập tên tài khoản.")
-        .min(2, "Tên phải ít nhất 2 ký tự.")
-        .max(50, "Tên có nhiều nhất 50 ký tự."),
+          .string()
+          .required("Nhập tên tài khoản.")
+          .min(2, "Tên phải ít nhất 2 ký tự.")
+          .max(50, "Tên có nhiều nhất 50 ký tự."),
       email: yup
-        .string()
-        .required("Nhập email.")
-        .email("E-mail không đúng.")
-        .max(50, "E-mail tối đa 50 ký tự."),
-      // password: yup
-      //   .string()
-      //   .required("Nhập mật khẩu.")
-      //   .min(8, "Mật khẩu phải ít nhất 8 ký tự."),
-      // password2: yup
-      //   .string()
-      //   .required("Nhập lại mật khẩu")
-      //   .oneOf([yup.ref('password')], 'Mật khẩu không trùng khớp'),
+          .string()
+          .required("Nhập email.")
+          .email("E-mail không đúng.")
+          .max(50, "E-mail tối đa 50 ký tự."),
     });
     return {
       // Chúng ta sẽ không muốn hiệu chỉnh props, nên tạo biến cục bộ

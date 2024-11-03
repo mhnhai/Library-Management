@@ -15,20 +15,18 @@
     <div class="container container-fluid">
       <!-- Danh sách giỏ hàng sau khi áp dụng bộ lọc -->
       <div v-for="(cart, index) in filteredCarts" :key="cart._id" class="row mb-4">
-        <div class="col-8">
+        <div class="col-5">
           <h5>{{ cart.book[0]?.title }}</h5>
-          <p>Trạng thái: {{ getStatusLabel(cart.status) }}</p>
+          <span :class="getStatusClass(cart.status)">{{ getStatusLabel(cart.status) }}</span>
         </div>
-        <div class="col-4 text-end">
+        <div class="col-5 text-end">
           <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#CartDetailModal' + index">Chi tiết giỏ hàng</button>
 
           <!-- Modal chi tiết giỏ hàng -->
           <CartDetailModal :cart="cart" :id="'CartDetailModal' + index" />
-
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -76,6 +74,14 @@ export default {
       };
       return statusLabels[status] || status;
     },
+    getStatusClass(status) {
+      const statusClasses = {
+        added: "badge bg-warning text-dark",
+        borrowing: "badge bg-info text-dark",
+        borrowed: "badge bg-success",
+      };
+      return statusClasses[status] || "badge bg-secondary";
+    },
   },
   created() {
     const accountData = localStorage.getItem("account");
@@ -88,7 +94,8 @@ export default {
 </script>
 
 <style scoped>
-.page {
-  max-width: 100%;
+.badge {
+  padding: 0.35em 0.65em;
+  border-radius: 0.375rem;
 }
 </style>

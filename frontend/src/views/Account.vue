@@ -6,11 +6,11 @@
     </div> 
 </template>
 <script>
-import SignUpForm from "@/components/SignUpForm.vue";
 import AccountService from "@/services/signin.service";
+import SignUpForm from "@/components/SignUpForm.vue";
 export default {
     components: {
-        SignUpForm,
+      SignUpForm,
     },
     props: {
         id: { type: String, required: true },
