@@ -41,7 +41,7 @@
 
             <div class="col-12 text-end">
               <button type="submit" class="btn btn-primary">{{ account._id ? 'Cập nhật' : 'Thêm mới' }}</button>
-              <button v-if="account._id" type="button" class="btn btn-danger" @click="deleteAccount">Xóa</button>
+              <button v-if="account._id" type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteAccount">Xóa</button>
             </div>
           </Form>
         </div>
@@ -98,12 +98,13 @@ export default {
         if (this.accountLocal._id) {
           await AccountService.update(this.accountLocal._id, this.accountLocal);
           alert('Tài khoản đã được cập nhật thành công.');
+          this.$emit('submit:account', this.accountLocal);
         } else {
-          await AccountService.create(this.accountLocal);
+          const createdAccount = await AccountService.create(this.accountLocal);
           alert('Tài khoản mới đã được thêm thành công.');
+          this.$emit('submit:account', createdAccount);
+          this.accountLocal = {};
         }
-        // this.$emit('account-updated', this.accountLocal);
-        window.location.reload();
       } catch (error) {
         console.log(error);
       }
@@ -113,8 +114,7 @@ export default {
         try {
           await AccountService.delete(this.accountLocal._id);
           alert('Tài khoản đã được xóa thành công.');
-          // this.$emit('account-deleted', this.accountLocal);
-          window.location.reload();
+          this.$emit('delete:account', this.accountLocal);
         } catch (error) {
           console.log(error);
         }

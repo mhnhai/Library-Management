@@ -5,13 +5,27 @@
         <h2>Danh sách nhà xuất bản</h2>
       </div>
     </div>
+
+    <!-- Search bar -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="input-group">
+          <input
+              type="text"
+              class="form-control"
+              v-model="searchText"
+              placeholder="Tìm kiếm tên nhà xuất bản..."
+          >
+        </div>
+      </div>
+    </div>
+
     <div class="row mb-3">
       <div class="col-auto">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPublisherModal">
           Thêm nhà xuất bản mới
         </button>
-        <!-- Modal for adding a new publisher -->
-        <PublisherModal :publisher="{}" id="addPublisherModal" @publisher-updated="addPublisher"/>
+        <PublisherModal :publisher="{}" id="addPublisherModal" @submit:publisher="addPublisher"/>
       </div>
       <div class="col-auto">
         <button class="btn btn-danger" @click="removeAllPublishers">
@@ -19,13 +33,37 @@
         </button>
       </div>
     </div>
-    <ul class="list-group col-auto overflow-y-scroll" style=" max-height: 100vh;">
-      <li class="list-group-item" v-for="(publisher, index) in publishers" :key="publisher._id">
+
+    <!-- Show result count -->
+    <div class="row mb-2" v-if="searchText">
+      <div class="col">
+        <small class="text-muted">
+          Tìm thấy {{ filteredPublishers.length }} kết quả
+        </small>
+      </div>
+    </div>
+
+    <ul class="list-group col-auto overflow-y-scroll" style="max-height: 100vh;">
+      <li class="list-group-item" v-for="(publisher, index) in filteredPublishers" :key="publisher._id">
         {{ publisher.name }}
-        <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#publisherModal' + index">
+        <button
+            type="button"
+            class="btn btn-sm btn-outline-primary float-end"
+            data-bs-toggle="modal"
+            :data-bs-target="'#publisherModal' + index"
+        >
           Chỉnh sửa
         </button>
-        <PublisherModal :publisher="publisher" :id="'publisherModal' + index" @publisher-updated="updatePublisher"  @publisher-deleted="deletePublisher"/>
+        <PublisherModal
+            :publisher="publisher"
+            :id="'publisherModal' + index"
+            @submit:publisher="updatePublisher"
+            @delete:publisher="deletePublisher"
+        />
+      </li>
+      <!-- Show message when no results found -->
+      <li class="list-group-item text-center text-muted" v-if="filteredPublishers.length === 0">
+        Không tìm thấy nhà xuất bản nào
       </li>
     </ul>
   </div>
@@ -42,7 +80,20 @@ export default {
   data() {
     return {
       publishers: [],
+      searchText: "",
     };
+  },
+  computed: {
+    filteredPublishers() {
+      const searchTerm = this.searchText.toLowerCase().trim();
+      if (!searchTerm) {
+        return this.publishers;
+      }
+
+      return this.publishers.filter(publisher => {
+        return publisher.name?.toLowerCase().includes(searchTerm);
+      });
+    }
   },
   methods: {
     async getPublishers() {
@@ -65,11 +116,9 @@ export default {
       this.publishers = [...this.publishers]; // Trigger reactivity
     },
     deletePublisher(deletePublisher) {
-
-      const index = this.publishers.indexOf(deletePublisher);
+      const index = this.publishers.findIndex(publisher => publisher._id === deletePublisher._id);
       this.publishers.splice(index, 1);
       this.publishers = [...this.publishers];
-
     },
     async removeAllPublishers() {
       if (confirm("Bạn muốn xóa tất cả Liên hệ?")) {
@@ -87,3 +136,15 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.input-group {
+  margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+  .input-group {
+    margin-bottom: 0;
+  }
+}
+</style>

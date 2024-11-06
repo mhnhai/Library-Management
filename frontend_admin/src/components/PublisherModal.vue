@@ -24,7 +24,7 @@
 
             <div class="col-12 text-end">
               <button type="submit" class="btn btn-primary">{{ publisher._id ? 'Cập nhật' : 'Thêm mới' }}</button>
-              <button v-if="publisher._id" type="button" class="btn btn-danger" @click="deletePublisher">Xóa</button>
+              <button v-if="publisher._id" type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deletePublisher">Xóa</button>
             </div>
           </Form>
         </div>
@@ -75,12 +75,13 @@ export default {
         if (this.publisherLocal._id) {
           await PublisherService.update(this.publisherLocal._id, this.publisherLocal);
           alert('Nhà xuất bản đã được cập nhật thành công.');
+          this.$emit('submit:publisher', this.publisherLocal);
         } else {
-          await PublisherService.create(this.publisherLocal);
+          const createdPublisher = await PublisherService.create(this.publisherLocal);
           alert('Nhà xuất bản mới đã được thêm thành công.');
+          this.$emit('submit:publisher', createdPublisher);
         }
-        // this.$emit('publisher-updated', this.publisherLocal);
-        window.location.reload();
+        this.publisherLocal = {};
       } catch (error) {
         console.log(error);
       }
@@ -90,8 +91,8 @@ export default {
         try {
           await PublisherService.delete(this.publisherLocal._id);
           alert('Nhà xuất bản đã được xóa thành công.');
-          // this.$emit('publisher-deleted', this.publisherLocal);
-          window.location.reload();
+          this.$emit('delete:publisher', this.publisherLocal);
+          // window.location.reload();
         } catch (error) {
           console.log(error);
         }

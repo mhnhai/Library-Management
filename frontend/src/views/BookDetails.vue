@@ -1,13 +1,14 @@
 <template>
   <div v-if="book" class="page-detail">
     <div class="detail-book col g-3">
-      <div class="row">
+      <div class="row bg-white py-2 rounded-3">
         <img class="col-md-6" v-if="book.imageUrl" :src="book.imageUrl" style="width: 30vh; height: 50vh;" />
         <div class="col">
+          <h3 class="col-md-10"><strong>Tiêu đề:</strong> {{ book.title }}</h3>
           <p class="col-md-3"><strong>Tác giả:</strong> {{ book.author }}</p>
           <p class="col-md-3"><strong>Thể loại:</strong> {{ book.category }}</p>
           <p class="col-md-4"><strong>Năm xuất bản:</strong> {{ book.publishDate }}</p>
-          <p class="col-md-4"><strong>Nhà xuất bản:</strong> {{ book.publisher }}</p>
+          <p class="col-md-6"><strong>Nhà xuất bản:</strong> {{ book.publisher }}</p>
           <p class="col-md-3"><strong>Số trang:</strong> {{ book.pages }}</p>
           <div class="col-md-3 mt-3">
             <button v-if="book.amount > 0" type="button" class="btn btn-outline-secondary"
@@ -16,8 +17,11 @@
           </div>
         </div>
       </div>
-      <hr>
-      <p class="col-md-12" style="white-space: pre-line;">{{ book.description }}</p>
+      <div class="row bg-white py-2 rounded-3 mt-3" style="white-space: pre-line;">
+        <div>
+          {{ book.description }}
+        </div>
+      </div>
     </div>
   </div>
 </template>

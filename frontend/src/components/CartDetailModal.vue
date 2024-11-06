@@ -22,12 +22,22 @@
             </div>
           </div>
         </div>
+        <div class="modal-footer">
+          <button
+              class="btn btn-outline-danger"
+              @click="changeToCancel('cancelled')"
+              :disabled="cart.status !== 'added'">
+            Hủy mượn
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BorrowService from "@/services/borrow.service.js";
+
 export default {
   props: {
     cart: {
@@ -38,22 +48,41 @@ export default {
   },
   data() {
     return {
-      isVisible: false
+      localCarts: [],
     }
   },
   methods: {
-    showModal() {
-      this.isVisible = true;
-      document.body.classList.add('modal-open');
+    async getBorrow() {
+      try {
+        this.localCarts = await BorrowService.getAll();
+      } catch (error) {
+        console.error("Error fetching borrows:", error);
+        // Handle error appropriately
+      }
     },
-    hideModal() {
-      this.isVisible = false;
-      document.body.classList.remove('modal-open');
-    }
+    async changeToCancel(newStatus) {
+      if(confirm("Xác nhận hủy mượn sách?"))
+      try {
+        const updatedCart = {
+          ...this.cart,
+          status: newStatus,
+        }
+        await BorrowService.update(updatedCart._id, updatedCart);
+        // Update the local cart data
+        const index = this.localCarts.findIndex(c => c._id === updatedCart._id);
+        if (index !== -1) {
+          this.localCarts[index] = updatedCart;
+        }
+        // Emit an event to inform the parent component of the update
+        this.$emit('cart-updated', updatedCart);
+      } catch (error) {
+        console.error("Error updating cart status:", error);
+        // Handle error appropriately
+      }
+    },
   },
-  beforeUnmount() {
-    // Cleanup when component is destroyed
-    document.body.classList.remove('modal-open');
+  created() {
+    this.getBorrow();
   }
 };
 </script>

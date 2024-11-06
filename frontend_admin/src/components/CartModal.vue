@@ -16,20 +16,21 @@
           </div>
           <p>Ngày mượn: {{cart.borrowed_date}}</p>
           <p>Ngày trả: {{cart.return_date}}</p>
+          <p>Hạn trả: {{cart.due_date}}</p>
           <h6 class="pt-3">Current Status: {{ cart.status }}</h6>
 
           <div>
             <button
                 class="btn btn-primary"
-                @click="changeToBorrow('borrowing')"
+                @click="changeToBorrow('borrowed')"
                 :disabled="cart.status !== 'added'">
-              Mark as Borrowing
+              Mark as borrowed
             </button>
             <button
                 class="btn btn-primary"
-                @click="changeToReturn('borrowed')"
-                :disabled="cart.status !== 'borrowing'">
-              Mark as Borrowed
+                @click="changeToReturn('returned')"
+                :disabled="cart.status !== 'borrowed'">
+              Mark as returned
             </button>
           </div>
         </div>
@@ -43,13 +44,33 @@
 
 <script>
 import BorrowService from "@/services/borrow.service.js";
-
+import BookService from "@/services/book.service.js";
 function getCurrentDate() {
   const today = new Date();
   const day = today.getDate();
   const month = today.getMonth() + 1;
   const year = today.getFullYear();
   return `${day}/${month}/${year}`;
+}
+
+function getDueDate() {
+  const today = new Date();
+  let dueDay = today.getDate() + 14;
+  let dueMonth = today.getMonth() + 1;
+  let dueYear = today.getFullYear();
+
+  // Kiểm tra nếu ngày vượt quá số ngày trong tháng
+  const daysInMonth = new Date(dueYear, dueMonth, 0).getDate();
+  if (dueDay > daysInMonth) {
+    dueDay -= daysInMonth;
+    dueMonth++;
+    if (dueMonth > 12) {
+      dueMonth = 1;
+      dueYear++;
+    }
+  }
+
+  return `${dueDay}/${dueMonth}/${dueYear}`;
 }
 
 export default {
@@ -75,11 +96,21 @@ export default {
     },
     async changeToBorrow(newStatus) {
       const currentDate = getCurrentDate();
-        const updatedCart = {
-          ...this.cart,
-          status: newStatus,
-          borrowed_date: currentDate,
-        }
+      const dueDate = getDueDate();
+      const updatedCart = {
+        ...this.cart,
+        status: newStatus,
+        borrowed_date: currentDate,
+        due_date: dueDate,
+      }
+
+      // Update the book amount in BookService
+      for (const book of this.cart.book) {
+        const bookData = await BookService.get(book._id);
+        bookData.amount--;
+        await BookService.update(book._id, bookData);
+      }
+
       try {
         await BorrowService.update(updatedCart._id, updatedCart);
         // Update the local cart data
@@ -100,6 +131,11 @@ export default {
         ...this.cart,
         status: newStatus,
         return_date: currentDate,
+      }
+      for (const book of this.cart.book) {
+        const bookData = await BookService.get(book._id);
+        bookData.amount++;
+        await BookService.update(book._id, bookData);
       }
       try {
         await BorrowService.update(updatedCart._id, updatedCart);

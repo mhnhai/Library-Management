@@ -24,7 +24,7 @@
             <div class="col-md-8">
               <label for="publisher" class="form-label">Nhà xuất bản</label>
               <select name="publisher" class="form-select" v-model="bookLocal.publisher">
-                <option class="list-group-item" v-for="(publisher) in publishers" :value="publisher._id">
+                <option class="list-group-item" v-for="(publisher) in publishers" :value="publisher.name">
                   {{ publisher.name }}
                 </option>
               </select>
@@ -71,7 +71,7 @@
             </div>
             <div class="col-12 text-end">
               <button type="submit" class="btn btn-primary">{{ book._id ? 'Cập nhật' : 'Thêm mới' }}</button>
-              <button v-if="book._id" type="button" class="btn btn-danger" @click="deleteBook">Xóa</button>
+              <button v-if="book._id" type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteBook">Xóa</button>
             </div>
           </Form>
         </div>
@@ -118,7 +118,6 @@ export default {
       bookLocal: { ...this.book },
       bookFormSchema,
       publishers: [],
-
     };
   },
   methods: {
@@ -132,16 +131,18 @@ export default {
     },
     async submitBook() {
       try {
-        console.log(1+1)
         if (this.bookLocal._id) {
           await BookService.update(this.bookLocal._id, this.bookLocal);
           alert('Sách đã được cập nhật thành công.');
+          this.$emit('submit:book', this.bookLocal);
         } else {
-          await BookService.create(this.bookLocal);
+          // Lưu response từ API create
+          const createdBook = await BookService.create(this.bookLocal);
           alert('Sách mới đã được thêm thành công.');
+          // Emit book đã có _id từ server
+          this.$emit('submit:book', createdBook);
+          this.bookLocal = {};
         }
-        this.$emit('submit:book', this.bookLocal);
-        // window.location.reload();
       } catch (error) {
         console.log(error);
       }
@@ -151,9 +152,7 @@ export default {
         try {
           await BookService.delete(this.bookLocal._id);
           alert('Sách đã được xóa thành công.');
-          //window.location.reload();
           this.$emit('delete:book', this.bookLocal);
-          // window.location.reload();
         } catch (error) {
           console.log(error);
         }

@@ -7,7 +7,7 @@
                 <li class="dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                         aria-expanded="false">
-                        {{ account ? account.username : 'Dropdown' }}
+                        {{ account ? account.fullname : 'Dropdown' }}
                     </a>
                     <ul class="dropdown-menu">
                         <li>

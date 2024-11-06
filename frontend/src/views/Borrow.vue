@@ -53,7 +53,8 @@ export default {
     deleteBook(index) {
       // Loại bỏ sách tại chỉ mục index và tạo mảng mới
       this.cart.book = this.books.filter((_, i) => i !== index);
-      this.books = this.cart.books;
+      this.cart.amount--;
+      this.books = this.cart.book;
 
       // Cập nhật lại localStorage sau khi xóa
       localStorage.setItem('borrowCart', JSON.stringify(this.cart));
