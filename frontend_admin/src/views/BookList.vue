@@ -18,22 +18,7 @@
           >
         </div>
       </div>
-      <div class="col-md-3">
-        <select class="form-select" v-model="selectedAuthor">
-          <option value="">Tất cả tác giả</option>
-          <option v-for="author in uniqueAuthors" :key="author" :value="author">
-            {{ author }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <select class="form-select" v-model="selectedPublisher">
-          <option value="">Tất cả nhà xuất bản</option>
-          <option v-for="publisher in uniquePublishers" :key="publisher" :value="publisher">
-            {{ publisher }}
-          </option>
-        </select>
-      </div>
+br
     </div>
 
     <div class="row mb-3">

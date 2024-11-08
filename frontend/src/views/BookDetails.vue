@@ -115,9 +115,6 @@ export default {
 
         alert("Đã thêm sách vào giỏ.");
 
-        // Emit event để cập nhật component giỏ hàng (nếu cần)
-        // this.$emit('cart-updated');
-
       } catch (error) {
         console.error("Lỗi khi thêm sách vào giỏ hàng:", error);
         alert("Đã xảy ra lỗi khi thêm sách vào giỏ hàng. Vui lòng thử lại sau.");

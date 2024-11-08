@@ -31,11 +31,13 @@
             <p v-else>Không có liên hệ nào.</p>
         </div>
     </div>
+
 </template>
 <script>
 import InputSearch from "@/components/InputSearch.vue";
 import BookList from "@/components/BookList.vue";
 import BookService from "@/services/book.service";
+
 export default {
     components: {
         InputSearch,

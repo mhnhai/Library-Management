@@ -6,6 +6,7 @@
       </div>
     </div>
 
+
     <!--  thanh tìm kiếm -->
     <div class="row mb-3">
       <div class="col-md-6">
@@ -18,7 +19,18 @@
           >
         </div>
       </div>
+      <div class="col-5 d-flex align-items-center mb-4">
+        <label for="statusFilter" class="me-2">Lọc theo trạng thái:</label>
+        <select id="statusFilter" v-model="filterStatus" class="form-select w-auto">
+          <option value="all">Tất cả</option>
+          <option value="cancelled">Đã hủy</option>
+          <option value="added">Đã thêm vào giỏ</option>
+          <option value="borrowed">Đã mượn</option>
+          <option value="returned">Đã trả</option>
+        </select>
+      </div>
     </div>
+
 
     <ul class="list-group col-auto overflow-y-scroll" style="max-height: 100vh;">
       <li class="list-group-item" v-for="(cart, index) in filteredCarts" :key="cart._id">
@@ -32,7 +44,7 @@
         >
           Chỉnh sửa
         </button>
-        <CartModal :cart="cart" :id="'cartModal' + index" @cart-updated="updateCart"/>
+        <CartModal :cart="cart" :id="'cartModal' + index" @update:cart="updateCart"/>
       </li>
     </ul>
   </div>
@@ -54,6 +66,7 @@ export default {
       carts: [],
       account: null,
       book: null,
+      filterStatus: "all",
     };
   },
   computed: {
@@ -61,18 +74,23 @@ export default {
       return [...this.carts].reverse();
     },
     filteredCarts() {
-      const searchTerm = this.searchText.toLowerCase().trim();
-      if (!searchTerm) {
-        return this.reversedCarts;
+      // Bước 1: Lọc theo trạng thái trước
+      let filtered = this.reversedCarts;
+      if (this.filterStatus !== "all") {
+        filtered = filtered.filter(cart => cart.status === this.filterStatus);
       }
 
-      return this.reversedCarts.filter(cart => {
-        const fullName = cart.account.fullname?.toLowerCase() || '';
-        const phone = cart.account.phone?.toLowerCase() || '';
+      // Bước 2: Tìm kiếm theo text
+      const searchTerm = this.searchText.toLowerCase().trim();
+      if (searchTerm) {
+        filtered = filtered.filter(cart => {
+          const fullName = cart.account.fullname?.toLowerCase() || '';
+          const phone = cart.account.phone?.toLowerCase() || '';
+          return fullName.includes(searchTerm) || phone.includes(searchTerm);
+        });
+      }
 
-        return fullName.includes(searchTerm) ||
-            phone.includes(searchTerm);
-      });
+      return filtered;
     }
   },
   methods: {

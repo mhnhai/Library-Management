@@ -5,11 +5,11 @@
             <!-- Hiển thị thông tin tài khoản nếu đã đăng nhập -->
             <div class="nav-item" v-if="account">
                 <li class="dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button"
                         aria-expanded="false">
                         {{ account ? account.fullname : 'Dropdown' }}
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <router-link class="dropdown-item btn btn-light"
                                 :to="{ name: 'account', params: { id: account._id } }">
@@ -34,17 +34,10 @@
                 <!-- Hiển thị đăng nhập nếu chưa có tài khoản -->
                 <router-link class="nav-link" :to="{ name: 'signin' }">Đăng nhập</router-link>
             </div>
-            <div class="nav-item">
-                <router-link :to="{ name: 'admin' }" class="nav-link">
-                    <i class="fa-solid fa-book-bookmark"></i>
-                </router-link>
-            </div>
             <div class="nav-item" v-if="account">
                 <router-link :to="{ name: 'cart' }" class="nav-link">
                     <i class="fa-solid fa-cart-shopping position-relative">
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ amount }}
-                        </span>
+
                     </i>
                 </router-link>
             </div>

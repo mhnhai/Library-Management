@@ -8,6 +8,7 @@
 <script>
 import AccountService from "@/services/signin.service";
 import SignUpForm from "@/components/SignUpForm.vue";
+import AuthService from "@/services/auth.service.js";
 export default {
     components: {
       SignUpForm,
@@ -41,9 +42,10 @@ export default {
         async updateAccount(data) {
             if(confirm("Xác nhận cập nhật thông tin?"))
             try {
-                await AccountService.update(this.account._id, data);
-                alert('Cập nhật thành công.');
-                this.$router.push({ name: "client" });
+              await AccountService.update(this.account._id, data);
+              await AuthService.login(data);
+              alert('Cập nhật thành công.');
+              this.$router.push({ name: "client" });
             } catch (error) {
                 console.log(error);
             }

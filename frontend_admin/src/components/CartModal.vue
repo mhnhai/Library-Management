@@ -11,31 +11,32 @@
           <div>
             <div class="row pt-3" v-for="(b, idx) in cart.book" :key="idx">
               <img class="col-4" v-if="b.imageUrl" :src="b.imageUrl" alt="Uploaded Image" style="height: 200px; width: 100px;" />
-              <p class="col-md-auto">Title: {{ b.title }} - Author: {{ b.author }}</p>
+              <p class="col-md-9">Title: {{ b.title }} - Author: {{ b.author }}</p>
             </div>
           </div>
           <p>Ngày mượn: {{cart.borrowed_date}}</p>
           <p>Ngày trả: {{cart.return_date}}</p>
           <p>Hạn trả: {{cart.due_date}}</p>
-          <h6 class="pt-3">Current Status: {{ cart.status }}</h6>
+          <div>
+            Trạng thái:
+            <span :class="getStatusClass(cart.status)">{{ getStatusLabel(cart.status) }}</span>
+          </div>
 
           <div>
             <button
-                class="btn btn-primary"
-                @click="changeToBorrow('borrowed')"
-                :disabled="cart.status !== 'added'">
-              Mark as borrowed
-            </button>
-            <button
-                class="btn btn-primary"
+                class="btn btn-outline-success float-end"
                 @click="changeToReturn('returned')"
                 :disabled="cart.status !== 'borrowed'">
-              Mark as returned
+              Đã trả
             </button>
+            <button
+                class="btn btn-outline-info float-end"
+                @click="changeToBorrow('borrowed')"
+                :disabled="cart.status !== 'added'">
+              Đã mượn
+            </button>
+
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -95,23 +96,23 @@ export default {
       }
     },
     async changeToBorrow(newStatus) {
-      const currentDate = getCurrentDate();
-      const dueDate = getDueDate();
-      const updatedCart = {
-        ...this.cart,
-        status: newStatus,
-        borrowed_date: currentDate,
-        due_date: dueDate,
-      }
-
-      // Update the book amount in BookService
-      for (const book of this.cart.book) {
-        const bookData = await BookService.get(book._id);
-        bookData.amount--;
-        await BookService.update(book._id, bookData);
-      }
+      if(confirm("Xác nhận đã mượn sách?"))
 
       try {
+        const currentDate = getCurrentDate();
+        const dueDate = getDueDate();
+        const updatedCart = {
+          ...this.cart,
+          status: newStatus,
+          borrowed_date: currentDate,
+          due_date: dueDate,
+        }
+        for (const book of this.cart.book) {
+          const bookData = await BookService.get(book._id);
+          bookData.amount--;
+          await BookService.update(book._id, bookData);
+        }
+
         await BorrowService.update(updatedCart._id, updatedCart);
         // Update the local cart data
         const index = this.localCarts.findIndex(c => c._id === updatedCart._id);
@@ -119,39 +120,57 @@ export default {
           this.localCarts[index] = updatedCart;
         }
         // Emit an event to inform the parent component of the update
-        this.$emit('cart-updated', updatedCart);
+        this.$emit('update:cart', updatedCart);
       } catch (error) {
         console.error("Error updating cart status:", error);
         // Handle error appropriately
       }
     },
     async changeToReturn(newStatus) {
-      const currentDate = getCurrentDate();
-      const updatedCart = {
-        ...this.cart,
-        status: newStatus,
-        return_date: currentDate,
-      }
-      for (const book of this.cart.book) {
-        const bookData = await BookService.get(book._id);
-        bookData.amount++;
-        await BookService.update(book._id, bookData);
-      }
-      try {
-        await BorrowService.update(updatedCart._id, updatedCart);
-        // Update the local cart data
-        const index = this.localCarts.findIndex(c => c._id === updatedCart._id);
-        if (index !== -1) {
-          this.localCarts[index] = updatedCart;
+        if(confirm("Xác nhận đã trả sách?"))
+        try {
+          const currentDate = getCurrentDate();
+          const updatedCart = {
+            ...this.cart,
+            status: newStatus,
+            return_date: currentDate,
+          }
+          for (const book of this.cart.book) {
+            const bookData = await BookService.get(book._id);
+            bookData.amount++;
+            await BookService.update(book._id, bookData);
+          }
+          await BorrowService.update(updatedCart._id, updatedCart);
+          // Update the local cart data
+          const index = this.localCarts.findIndex(c => c._id === updatedCart._id);
+          if (index !== -1) {
+            this.localCarts[index] = updatedCart;
+          }
+          // Emit an event to inform the parent component of the update
+          this.$emit('update:cart', updatedCart);
+        } catch (error) {
+          console.error("Error updating cart status:", error);
+          // Handle error appropriately
         }
-        // Emit an event to inform the parent component of the update
-        this.$emit('cart-updated', updatedCart);
-      } catch (error) {
-        console.error("Error updating cart status:", error);
-        // Handle error appropriately
-      }
     },
-
+    getStatusLabel(status) {
+      const statusLabels = {
+        cancelled: "Đã hủy",
+        added: "Đã thêm vào giỏ",
+        borrowed: "Đã mượn",
+        returned: "Đã trả",
+      };
+      return statusLabels[status] || status;
+    },
+    getStatusClass(status) {
+      const statusClasses = {
+        cancelled: "badge bg-danger",
+        added: "badge bg-warning text-dark",
+        borrowed: "badge bg-info text-dark",
+        returned: "badge bg-success",
+      };
+      return statusClasses[status] || "badge bg-secondary";
+    },
   },
   created() {
     this.getBorrow();
