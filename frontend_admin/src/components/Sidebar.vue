@@ -20,7 +20,7 @@
         <div class="nav-item">
           <router-link :to="{ name: 'cart' }" class="nav-link" :class="{ 'active': isActive('cart') }">
             <i class="fa-solid fa-cart-shopping"></i>
-            <strong> Giỏ hàng</strong>
+            <strong> Giỏ mượn</strong>
           </router-link>
         </div>
         <div class="nav-item">

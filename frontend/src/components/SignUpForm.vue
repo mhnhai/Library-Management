@@ -7,7 +7,7 @@
 
       <ErrorMessage name="fullname" class="error-feedback" />
     </div>
-    <div class="form-group">
+    <div v-if="!accountLocal._id" class="form-group">
       <label for="username">Tên tài khoản</label>
 
       <Field name="username" type="text" class="form-control" v-model="accountLocal.username" />
