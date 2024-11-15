@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-3" :hidden="!isAdmin">
       <div class="col-auto">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
           Thêm tài khoản mới
@@ -35,11 +35,12 @@
     </div>
     <ul class="list-group col-auto overflow-y-scroll" style=" max-height: 100vh;">
       <li class="list-group-item" v-for="(account, index) in filteredAccounts" :key="account._id">
-        {{ account.username }}
+        {{ account.fullname }}
         <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#accountModal' + index">
           Chỉnh sửa
         </button>
-        <AccountModal :account="account" :id="'accountModal' + index" @submit:account="updateAccount"  @delete:account="deleteAccount"/>
+        <AccountModal v-if="isAdmin" :account="account" :id="'accountModal' + index" @submit:account="updateAccount"  @delete:account="deleteAccount"/>
+        <StaffAccountModal v-else :account="account" :id="'accountModal' + index"></StaffAccountModal>
       </li>
       <li class="list-group-item text-center text-muted" v-if="accounts.length === 0">
         Không tìm thấy sách nào
@@ -51,15 +52,18 @@
 <script>
 import AccountModal from "@/components/AccountModal.vue";
 import SignInService from "@/services/signin.service.js";
-
+import AuthService from "@/services/auth.service.js";
+import StaffAccountModal from "@/components/StaffAccountModal.vue";
 export default {
   components: {
+    StaffAccountModal,
     AccountModal,
   },
   data() {
     return {
       accounts: [],
       searchText: "",
+      isAdmin: false,
     };
   },
   computed:{
@@ -102,8 +106,7 @@ export default {
       this.accounts = [...this.accounts]; // Trigger reactivity
     },
     deleteAccount(deleteAccount) {
-
-      const index = this.accounts.indexOf(deleteAccount);
+      const index = this.accounts.findIndex(account => account._id === deleteAccount._id);
       this.accounts.splice(index, 1);
       this.accounts = [...this.accounts];
 
@@ -121,6 +124,7 @@ export default {
   },
   created() {
     this.getAccounts();
+    this.isAdmin = AuthService.isAdmin();
   }
 };
 </script>

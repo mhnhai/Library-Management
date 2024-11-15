@@ -7,9 +7,9 @@ export default {
             // Gọi SignInService.getAll() để lấy danh sách tài khoản mà không dùng POST
             const accounts = await SignInService.getAll();
 
-            // Tìm tài khoản khớp với username và password và là admin
+            // Tìm tài khoản khớp với username và password và khác user
             const account = accounts.find(
-                acc => (acc.username === data.username && acc.password === data.password && acc.role === "admin")
+                acc => (acc.username === data.username && acc.password === data.password && acc.role !== "user")
             );
 
             if (!account) {

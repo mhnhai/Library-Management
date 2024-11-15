@@ -19,7 +19,7 @@
           >
         </div>
       </div>
-      <div class="col-5 d-flex align-items-center mb-4">
+      <div class="col-5 d-flex align-items-center">
         <label for="statusFilter" class="me-2">Lọc theo trạng thái:</label>
         <select id="statusFilter" v-model="filterStatus" class="form-select w-auto">
           <option value="all">Tất cả</option>

@@ -15,7 +15,8 @@ class SigninService {
             gender: payload.gender,
             address: payload.address,
             phone: payload.phone,
-            role: payload.role, // admin, user
+            role: payload.role, //  user, librarian, admin
+
         };
         // Remove undefined fields
         Object.keys(signin).forEach(
