@@ -11,6 +11,8 @@ import BookDetails from "@/views/BookDetails.vue";
 import Account from "@/views/Account.vue"
 import Borrow from "@/views/Borrow.vue"
 import History from "@/views/History.vue";
+import AboutPage from "@/views/AboutPage.vue";
+import Contact from "@/views/Contact.vue";
 const routes = [
     {
         path: "/",
@@ -74,6 +76,16 @@ const routes = [
         name: "history",
         component: History,
         props: true,
+    },
+    {
+        path: "/about",
+        name: "about",
+        component: AboutPage,
+    },
+    {
+        path: "/contact",
+        name: "contact",
+        component: Contact,
     },
     
 ];

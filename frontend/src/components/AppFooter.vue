@@ -4,7 +4,7 @@
     <div class="container">
       <p class="mb-1">© 2024 My Website. All rights reserved.</p>
       <nav class="d-flex justify-content-center text-decoration-none">
-        <router-link class="nav-link mx-1" :to="{ name: 'client' }">
+        <router-link class="nav-link mx-1" :to="{ name: 'about' }">
           Giới thiệu
         </router-link>
         <span>|</span>
@@ -12,7 +12,7 @@
           Chính sách
         </router-link>
         <span>|</span>
-        <router-link class="nav-link mx-1" :to="{ name: 'client' }">
+        <router-link class="nav-link mx-1" :to="{ name: 'contact' }">
           Liên hệ
         </router-link>
       </nav>

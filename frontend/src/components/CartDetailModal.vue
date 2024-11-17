@@ -19,6 +19,7 @@
             <div class="dates-container text-start">
               <p>Ngày mượn: {{cart.borrowed_date}}</p>
               <p>Ngày trả: {{cart.return_date}}</p>
+              <p>Hạn trả: {{cart.due_date}}</p>
             </div>
           </div>
         </div>

@@ -19,10 +19,9 @@ export default {
   </div>
 </template>
 <style>
-
 .page {
   max-width: 1000px;
-  min-height: 175vh;
+  min-height: 100vh;
   margin: auto;
   font-family: Bitter, serif;
 }

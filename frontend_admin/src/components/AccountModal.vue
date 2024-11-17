@@ -18,8 +18,8 @@
             </div>
             <div class="form-group">
               <label for="username">Tên tài khoản</label>
-
-              <Field name="username" type="text" class="form-control" v-model="accountLocal.username" />
+              <Field name="username" type="text" class="form-control" v-model="accountLocal.username" disabled v-if="accountLocal._id"/>
+              <Field name="username" type="text" class="form-control" v-model="accountLocal.username" v-else/>
 
               <ErrorMessage name="username" class="error-feedback" />
             </div>
@@ -109,7 +109,7 @@ export default {
   data() {
     const accountFormSchema = yup.object().shape({
       username: yup.string().required("Tên tài khoản không được để trống.")
-          .min(3, "Tên tài khoản phải có ít nhất 3 ký tự.")
+          .min(3, "Tên tài khoản phải có ít nhất 6 ký tự.")
           .max(30, "Tên tài khoản không được quá 30 ký tự."),
       email: yup.string().required("Email không được để trống.")
           .email("Email không hợp lệ."),
