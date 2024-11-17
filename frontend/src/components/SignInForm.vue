@@ -36,16 +36,12 @@ export default {
     const accountFormSchema = yup.object().shape({
       username: yup
         .string()
-        .required("Tên phải có giá trị.")
-        .min(6, "Tên phải ít nhất 6 ký tự.")
-        .max(50, "Tên có nhiều nhất 50 ký tự."),
-      email: yup
-        .string()
-        .email("E-mail không đúng.")
-        .max(50, "E-mail tối đa 50 ký tự."),
+        .required("Nhập vào tên tài khoản.")
+        ,
       password: yup
         .string()
-        .min(8, "Mật khẩu phải ít nhất 8 ký tự.")
+          .required("Nhập vào mật khẩu."),
+
     
     });
     return {

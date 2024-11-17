@@ -108,17 +108,43 @@ export default {
   emits: ["submit:account", "delete:account"],
   data() {
     const accountFormSchema = yup.object().shape({
-      username: yup.string().required("Tên tài khoản không được để trống.")
-          .min(3, "Tên tài khoản phải có ít nhất 6 ký tự.")
-          .max(30, "Tên tài khoản không được quá 30 ký tự."),
-      email: yup.string().required("Email không được để trống.")
-          .email("Email không hợp lệ."),
-      password: yup.string().required("Mật khẩu không được để trống.")
-          .min(6, "Mật khẩu phải có ít nhất 6 ký tự."),
-      role: yup.string().required("Vai trò không được để trống.")
-          .oneOf(['user', 'admin' , 'librarian'], "Vai trò không hợp lệ."),
+      fullname: yup.string().required("Nhập họ và tên."),
+      username: yup
+          .string()
+          .required("Nhập tên tài khoản.")
+          .min(2, "Tên phải ít nhất 6 ký tự.")
+          .max(50, "Tên có nhiều nhất 50 ký tự."),
+      email: yup
+          .string()
+          .required("Nhập email.")
+          .email("E-mail không đúng.")
+          .max(50, "E-mail tối đa 50 ký tự."),
+      phone:yup
+          .string()
+          .required("Nhập số điện thoại")
+          .min(10,"Nhập đúng 10 số")
+          .max(10,"Nhập đúng 10 số")
+      ,
+      gender: yup
+          .string()
+          .required("Vui lòng chọn giới tính")
+          .notOneOf([""], 'Vui lòng chọn giới tính'),
+      birthdate:yup
+          .string()
+          .required("Nhập ngày sinh")
+      ,
+      password: yup
+          .string()
+          .required("Nhập mật khẩu.")
+          .min(8, "Mật khẩu phải ít nhất 8 ký tự."),
+      password2: yup
+          .string()
+          .required("Nhập lại mật khẩu")
+          .oneOf([yup.ref('password')], 'Mật khẩu không trùng khớp'),
+      address: yup
+          .string()
+          .required("Nhập vào địa chỉ"),
     });
-
     return {
       accountLocal: { ...this.account },
       accountFormSchema,
@@ -163,3 +189,6 @@ export default {
   },
 };
 </script>
+<style scoped>
+@import "@/assets/form.css";
+</style>

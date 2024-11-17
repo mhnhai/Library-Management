@@ -61,19 +61,17 @@ export default {
     },
     computed: {
         // Chuyển các đối tượng book thành chuỗi để tiện cho tìm kiếm.
-        bookStrings() {
-            return this.books.map((book) => {
-                const { title, author, category, languague } = book;
-                return [title, author, category, languague].join("").toLowerCase();
-            });
-        },
-        // Trả về các book có chứa thông tin cần tìm kiếm.
-        filteredBooks() {
-            if (!this.searchText) return this.books;
-            return this.books.filter((_book, index) =>
-                this.bookStrings[index].includes(this.searchText)
-            );
-        },
+      filteredBooks() {
+        return this.books.filter(book => {
+          // Search text filter
+          const searchTerm = this.searchText.toLowerCase().trim();
+          const matchesSearch = !searchTerm ||
+              book.title?.toLowerCase().includes(searchTerm) ||
+              book.author?.toLowerCase().includes(searchTerm);
+
+          return matchesSearch;
+        });
+      },
         filteredBooksCount() {
             return this.filteredBooks.length;
         },

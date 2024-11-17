@@ -1,17 +1,17 @@
 <template> 
     <div v-if="account" class="page">
         <h4>Thông tin cá nhân</h4>
-        <SignUpForm :account="account" @submit:account="updateAccount" @delete:account="deleteAccount" />
+        <EditAccountForm :account="account" @submit:account="updateAccount" @delete:account="deleteAccount" />
         <p>{{ message }}</p>
     </div> 
 </template>
 <script>
 import AccountService from "@/services/signin.service";
-import SignUpForm from "@/components/SignUpForm.vue";
 import AuthService from "@/services/auth.service.js";
+import EditAccountForm from "@/components/EditAccountForm.vue";
 export default {
     components: {
-      SignUpForm,
+      EditAccountForm,
     },
     props: {
         id: { type: String, required: true },

@@ -38,11 +38,13 @@
     </div>
     <div class="form-group">
       <label for="gender">Giới tính</label>
-      <div class="col-md-4">
-        <select name="gender" class="form-select" v-model="accountLocal.gender">
-          <option value="male" selected>Nam</option>
+      <div class="col-md-5">
+        <Field name="gender" as="select" class="form-select" v-model="accountLocal.gender">
+          <option value="">Chọn giới tính</option>
+          <option value="male">Nam</option>
           <option value="female">Nữ</option>
-        </select>
+        </Field>
+        <ErrorMessage name="gender" class="error-feedback" />
       </div>
     </div>
     <div class="form-group">
@@ -97,21 +99,38 @@ export default {
       username: yup
         .string()
         .required("Nhập tên tài khoản.")
-        .min(2, "Tên phải ít nhất 2 ký tự.")
+        .min(2, "Tên phải ít nhất 6 ký tự.")
         .max(50, "Tên có nhiều nhất 50 ký tự."),
       email: yup
         .string()
         .required("Nhập email.")
         .email("E-mail không đúng.")
         .max(50, "E-mail tối đa 50 ký tự."),
-      // password: yup
-      //   .string()
-      //   .required("Nhập mật khẩu.")
-      //   .min(8, "Mật khẩu phải ít nhất 8 ký tự."),
-      // password2: yup
-      //   .string()
-      //   .required("Nhập lại mật khẩu")
-      //   .oneOf([yup.ref('password')], 'Mật khẩu không trùng khớp'),
+      phone:yup
+          .string()
+          .required("Nhập số điện thoại")
+          .min(10,"Nhập đúng 10 số")
+          .max(10,"Nhập đúng 10 số")
+      ,
+      gender: yup
+          .string()
+          .required("Vui lòng chọn giới tính")
+          .notOneOf([""], 'Vui lòng chọn giới tính'),
+      birthdate:yup
+          .string()
+          .required("Nhập ngày sinh")
+        ,
+      password: yup
+        .string()
+        .required("Nhập mật khẩu.")
+        .min(8, "Mật khẩu phải ít nhất 8 ký tự."),
+      password2: yup
+        .string()
+        .required("Nhập lại mật khẩu")
+        .oneOf([yup.ref('password')], 'Mật khẩu không trùng khớp'),
+      address: yup
+          .string()
+          .required("Nhập vào địa chỉ"),
     });
     return {
       // Chúng ta sẽ không muốn hiệu chỉnh props, nên tạo biến cục bộ

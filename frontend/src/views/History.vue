@@ -22,7 +22,7 @@
             <span :class="getStatusClass(cart.status)">{{ getStatusLabel(cart.status) }}</span>
           </div>
           <div class="col-5 text-end">
-            <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#CartDetailModal' + index">Chi tiết giỏ hàng</button>
+            <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#CartDetailModal' + index">Chi tiết giỏ mượn</button>
             <!-- Modal chi tiết giỏ hàng -->
             <CartDetailModal :cart="cart" :id="'CartDetailModal' + index" @cart-updated="updateCart"/>
           </div>

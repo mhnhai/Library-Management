@@ -102,9 +102,7 @@ export default {
       title: yup.string().required("Tên phải có giá trị.")
           .min(2, "Tên phải ít nhất 2 ký tự.")
           .max(50, "Tên có nhiều nhất 50 ký tự."),
-      author: yup.string().required("Tác giả không được để trống.")
-          .min(2, "Tên tác giả phải ít nhất 2 ký tự.")
-          .max(50, "Tên tác giả có nhiều nhất 50 ký tự."),
+      author: yup.string().required("Tác giả không được để trống."),
       publishDate: yup.number().required("Năm xuất bản không được để trống.")
           .min(1800, "Năm xuất bản không hợp lệ.")
           .max(new Date().getFullYear(), "Năm xuất bản không được vượt quá năm hiện tại."),
