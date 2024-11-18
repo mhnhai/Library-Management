@@ -14,6 +14,7 @@
 <script>
 import AuthService from "@/services/auth.service.js";
 import SignInForm from "@/components/SignInForm.vue";
+import {toast} from "vue3-toastify";
 
 export default {
   components: {
@@ -36,9 +37,18 @@ export default {
             const account = await AuthService.login(data);
 
             // Đăng nhập thành công, lưu thông báo và điều hướng dựa trên vai trò
-            this.message = "Đăng nhập thành công";
-            this.$router.push({ name: "client" });
+            toast("Đăng nhập thành công.", {
+              "type": "default",
+              "theme": "light",
+              "pauseOnHover": false,
+              "dangerouslyHTMLString": true,
+              "autoClose": 2000,
+              "limit":1
+            });
+            setTimeout(() => {
+              this.$router.push({ name: "client" })}, 3000);
             this.$emit('login', account);
+
           } catch (error) {
             this.message = error.message || "Có lỗi xảy ra khi đăng nhập, vui lòng thử lại";
           }

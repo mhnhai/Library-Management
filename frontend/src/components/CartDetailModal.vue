@@ -38,6 +38,7 @@
 
 <script>
 import BorrowService from "@/services/borrow.service.js";
+import {toast} from "vue3-toastify";
 
 export default {
   props: {
@@ -74,6 +75,11 @@ export default {
         if (index !== -1) {
           this.localCarts[index] = updatedCart;
         }
+        toast("Đã hủy mượn sách.", {
+          "type": "error",
+          "pauseOnHover": false,
+          "dangerouslyHTMLString": true,
+        });
         // Emit an event to inform the parent component of the update
         this.$emit('cart-updated', updatedCart);
       } catch (error) {

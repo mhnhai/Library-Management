@@ -33,6 +33,8 @@
 
 <script>
 import BorrowService from "@/services/borrow.service";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 export default {
   data() {
@@ -79,8 +81,12 @@ export default {
         // Reset trạng thái của giỏ mượn và danh sách sách
         this.books = [];
         this.cart = { book: [], amount: 0 };
-
-        alert("Đặt mượn thành công!");
+        // Toast thông báo
+        return toast("Đặt mượn thành công.", {
+          "type": "success",
+          "pauseOnHover": false,
+          "dangerouslyHTMLString": true,
+        });
 
       } catch (error) {
         console.error("Error while borrowing:", error);

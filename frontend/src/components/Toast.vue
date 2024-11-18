@@ -23,6 +23,13 @@
       <div class="toast-body">
         {{ message }}
       </div>
+      <!-- Progress bar -->
+      <div class="toast-progress-container">
+        <div
+            class="toast-progress-bar"
+            :style="{ width: `${progress}%` }"
+        ></div>
+      </div>
     </div>
   </div>
 </template>
@@ -45,54 +52,74 @@ export default {
   },
   data() {
     return {
-      isVisible: false
+      isVisible: false,
+      progress: 100,
+      progressInterval: null,
+      startTime: null
     };
   },
   methods: {
     showToast() {
       this.isVisible = true;
-      setTimeout(() => {
-        this.isVisible = false;
-      }, this.duration);
+      this.progress = 100;
+      this.startTime = Date.now();
+
+      // Cập nhật progress bar mỗi 10ms
+      this.progressInterval = setInterval(() => {
+        const elapsed = Date.now() - this.startTime;
+        const remaining = Math.max(0, 100 - (elapsed / this.duration) * 100);
+        this.progress = remaining;
+
+        if (remaining <= 0) {
+          this.closeToast();
+        }
+      }, 10);
     },
     closeToast() {
       this.isVisible = false;
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+        this.progressInterval = null;
+      }
+      this.$emit('close');
     }
   },
   mounted() {
     this.showToast();
+  },
+  beforeDestroy() {
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+    }
   }
 };
 </script>
 
 <style scoped>
 .toast {
+  position: relative;
   transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  min-width: 300px;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+.toast-progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #e9ecef;
+  overflow: hidden;
+}
+
+.toast-progress-bar {
+  height: 100%;
+  background-color: #0d6efd;
+  transition: width 10ms linear;
 }
 </style>
-
-<!-- App.vue -->
-<!--<template>-->
-<!--  <div id="app">-->
-<!--    <button class="btn btn-primary" @click="showToast">Hiển thị Toast</button>-->
-<!--    &lt;!&ndash; Component Toast &ndash;&gt;-->
-<!--    <Toast ref="toastComponent" :message="'Xin chào! Đây là thông báo.'" />-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import Toast from '@/components/Toast.vue';-->
-
-<!--export default {-->
-<!--  components: {-->
-<!--    Toast-->
-<!--  },-->
-<!--  methods: {-->
-<!--    showToast() {-->
-<!--      // Gọi phương thức showToast từ Toast component-->
-<!--      this.$refs.toastComponent.showToast();-->
-<!--    }-->
-<!--  }-->
-<!--};-->
-<!--</script>-->
-

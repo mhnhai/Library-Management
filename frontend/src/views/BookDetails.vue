@@ -28,6 +28,7 @@
 
 <script>
 import BookService from "@/services/book.service";
+import {toast} from "vue3-toastify";
 
 export default {
   props: {
@@ -112,9 +113,12 @@ export default {
 
         // Lưu giỏ hàng vào localStorage
         this.saveCartToStorage(cart);
-
-        alert("Đã thêm sách vào giỏ.");
-
+        //Toast thông báo
+        return toast("Đã thêm sách vào giỏ.", {
+          "type": "success",
+          "pauseOnHover": false,
+          "dangerouslyHTMLString": true,
+        });
       } catch (error) {
         console.error("Lỗi khi thêm sách vào giỏ hàng:", error);
         alert("Đã xảy ra lỗi khi thêm sách vào giỏ hàng. Vui lòng thử lại sau.");

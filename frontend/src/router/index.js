@@ -13,6 +13,7 @@ import Borrow from "@/views/Borrow.vue"
 import History from "@/views/History.vue";
 import AboutPage from "@/views/AboutPage.vue";
 import Contact from "@/views/Contact.vue";
+import ChangePassword from "@/views/ChangePassword.vue";
 const routes = [
     {
         path: "/",
@@ -63,6 +64,12 @@ const routes = [
         path: "/account/:id",
         name: "account",
         component: Account,
+        props: true
+    },
+    {
+        path: "/change-pw/:id",
+        name: "change-pw",
+        component: ChangePassword,
         props: true
     },
     {

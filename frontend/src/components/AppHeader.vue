@@ -22,7 +22,12 @@
                             Lịch sử mượn sách
                           </router-link>
                         </li>
-                        <li><a class="dropdown-item btn btn-light" href="#">Something else here</a></li>
+                        <li>
+                          <router-link class="dropdown-item btn btn-light"
+                                       :to="{ name: 'change-pw', params: { id: account._id } }">
+                            Đổi mật khẩu
+                          </router-link>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
