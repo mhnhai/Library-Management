@@ -42,7 +42,7 @@
             data-bs-toggle="modal"
             :data-bs-target="'#cartModal' + index"
         >
-          Cập nhật trạng thái
+          Xem chi tiết
         </button>
         <CartModal :cart="cart" :id="'cartModal' + index" @update:cart="updateCart"/>
       </li>

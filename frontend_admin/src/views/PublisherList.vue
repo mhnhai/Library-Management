@@ -52,7 +52,7 @@
             data-bs-toggle="modal"
             :data-bs-target="'#publisherModal' + index"
         >
-          Chỉnh sửa
+          Xem chi tiết
         </button>
         <PublisherModal
             :publisher="publisher"

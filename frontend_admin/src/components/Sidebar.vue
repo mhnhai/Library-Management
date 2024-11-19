@@ -1,7 +1,7 @@
 <template>
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light text-white" style="width: 35vh; height: 100vh;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light text-white" style="max-width: 35vh; min-height: 100vh;">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-        <span class="fs-4 text-white">Quản lý hệ thống</span>
+        <span class="fs-4 text-white">Hệ thống quản lý</span>
       </a>
       <hr>
       <div class="navbar-nav flex-column mb-auto">
@@ -33,7 +33,7 @@
         </div>
         <hr>
         <div class="nav-item" v-if="account">
-          
+
             <p class="dropdown-toggle px-2 text-white" data-bs-toggle="dropdown" role="button"
                aria-expanded="false">
               {{ account ? account.username : 'Dropdown' }}

@@ -33,17 +33,27 @@
         </button>
       </div>
     </div>
+
+
+    <div class="row mb-2" v-if="searchText">
+      <div class="col">
+        <small class="text-muted">
+          Tìm thấy {{ filteredAccounts.length }} kết quả
+        </small>
+      </div>
+    </div>
+
     <ul class="list-group col-auto overflow-y-scroll" style=" max-height: 100vh;">
       <li class="list-group-item" v-for="(account, index) in filteredAccounts" :key="account._id">
         {{ account.fullname }}
         <button type="button" class="btn btn-sm btn-outline-primary float-end" data-bs-toggle="modal" :data-bs-target="'#accountModal' + index">
-          Chỉnh sửa
+          Xem chi tiết
         </button>
         <AccountModal v-if="isAdmin" :account="account" :id="'accountModal' + index" @submit:account="updateAccount"  @delete:account="deleteAccount"/>
         <StaffAccountModal v-else :account="account" :id="'accountModal' + index"></StaffAccountModal>
       </li>
-      <li class="list-group-item text-center text-muted" v-if="accounts.length === 0">
-        Không tìm thấy sách nào
+      <li class="list-group-item text-center text-muted" v-if="filteredAccounts.length === 0">
+        Không tìm thấy tài khoản nào
       </li>
     </ul>
   </div>

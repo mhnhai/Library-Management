@@ -10,6 +10,7 @@
           <p class="col-md-4"><strong>Năm xuất bản:</strong> {{ book.publishDate }}</p>
           <p class="col-md-6"><strong>Nhà xuất bản:</strong> {{ book.publisher }}</p>
           <p class="col-md-3"><strong>Số trang:</strong> {{ book.pages }}</p>
+          <h4 class="col-md-3 text-danger"><strong>{{ book.price }}<sup>₫</sup></strong></h4>
           <div class="col-md-3 mt-3">
             <button v-if="book.amount > 0" type="button" class="btn btn-outline-secondary"
                     @click="addToBorrow()">Mượn sách</button>
@@ -17,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="row bg-white py-2 rounded-3 mt-3" style="white-space: pre-line;">
+      <div class="row bg-white py-2 rounded-3 mt-3 my-3" style="white-space: pre-line;">
         <div>
           {{ book.description }}
         </div>

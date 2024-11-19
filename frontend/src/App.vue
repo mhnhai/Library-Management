@@ -27,7 +27,7 @@ export default {
 }
 .page-detail{
   max-width: 1000px;
-  min-height: 100vh;
+  min-height: auto;
   margin: auto;
   font-family: Bitter, serif;
 

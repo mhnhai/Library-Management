@@ -51,7 +51,7 @@
             data-bs-toggle="modal"
             :data-bs-target="'#bookModal' + index"
         >
-          Chỉnh sửa
+          Xem chi tiết
         </button>
         <BookModal
             :book="book"

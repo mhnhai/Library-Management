@@ -11,7 +11,7 @@
             <img class="col-3" v-if="book.imageUrl" :src="book.imageUrl" style="width: 150px; height: 180px;" />
             <div class="col-7">
               <p class="col-xl-12 fw-bold">{{ book.title }}</p>
-              <button class="btn btn-outline-dark col-5" @click="deleteBook(index)">
+              <button class="btn btn-outline-danger col-5" @click="deleteBook(index)">
                 <i class="fa-regular fa-trash-can fa-flip-horizontal"></i>
                 Xóa
               </button>
@@ -63,6 +63,7 @@ export default {
     },
 
     async borrow() {
+      if(confirm("Xác nhận đặt mượn sách"))
       try {
         // Tạo đối tượng mượn sách mới
         const borrowData = {
@@ -87,7 +88,6 @@ export default {
           "pauseOnHover": false,
           "dangerouslyHTMLString": true,
         });
-
       } catch (error) {
         console.error("Error while borrowing:", error);
         alert("Có lỗi xảy ra khi đặt mượn!");

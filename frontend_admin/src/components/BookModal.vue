@@ -21,13 +21,18 @@
             </div>
 
             <!-- publisher, publishDate -->
-            <div class="col-md-8">
+            <div class="col-md-4">
               <label for="publisher" class="form-label">Nhà xuất bản</label>
               <select name="publisher" class="form-select" v-model="bookLocal.publisher">
                 <option class="list-group-item" v-for="(publisher) in publishers" :value="publisher.name">
                   {{ publisher.name }}
                 </option>
               </select>
+            </div>
+            <div class="col-md-4">
+              <label for="price" class="form-label">Đơn giá</label>
+              <Field name="price" type="number" class="form-control" v-model="bookLocal.price" />
+              <ErrorMessage name="price" class="text-danger" />
             </div>
             <div class="col-md-4">
               <label for="publishDate" class="form-label">Năm xuất bản</label>

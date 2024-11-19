@@ -41,11 +41,11 @@ export default {
               "theme": "light",
               "pauseOnHover": false,
               "dangerouslyHTMLString": true,
-              "autoClose": 2000,
+              "autoClose": 1000,
               "limit":1
             });
             setTimeout(() => {
-              this.$router.push({ name: "client" })}, 3000);
+              this.$router.push({ name: "client" })}, 2000);
             this.$emit('login', account);
 
           } catch (error) {
