@@ -7,7 +7,7 @@
 </template>
 <script>
 import SignUpForm from "@/components/SignUpForm.vue";
-import SignInService from "@/services/signin.service"; "@/services/signin.service";
+import SignInService from "@/services/signin.service";
 export default {
   components: {
     SignUpForm,
@@ -24,7 +24,8 @@ export default {
   methods: {
     async uploadAccount(data) {
       try {
-        this.accounts = await SignInService.getAll();
+        // this.accounts = await SignInService.getAll();
+
         await SignInService.create(data)
         this.$router.push({ name: "signin" })
       } catch (error) {

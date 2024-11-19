@@ -28,7 +28,7 @@
         </div>
         <div class="col-md-auto">
             <BookList v-if="filteredBooksCount > 0" :books="filteredBooks" v-model:activeIndex="activeIndex" />
-            <p v-else>Không có liên hệ nào.</p>
+            <p v-else>Không có sách nào.</p>
         </div>
     </div>
 

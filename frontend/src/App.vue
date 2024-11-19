@@ -29,5 +29,7 @@ export default {
   max-width: 1000px;
   min-height: 100vh;
   margin: auto;
+  font-family: Bitter, serif;
+
 }
 </style>
