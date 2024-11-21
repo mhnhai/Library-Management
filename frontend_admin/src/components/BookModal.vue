@@ -164,17 +164,42 @@ export default {
     async getUrl(event) {
       const file = event.target.files[0];
       if (!file) return;
+
+      // Lưu lại URL ảnh cũ trước khi upload
+      const oldImageUrl = this.bookLocal.imageUrl;
+
       try {
         const formData = new FormData();
         formData.append('coverImage', file);
+
         const response = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
         });
 
         const result = await response.json();
+
         if (response.ok) {
           this.bookLocal.imageUrl = result.fileUrl;
+
+          // Nếu có ảnh cũ, thực hiện xóa ảnh cũ
+          if (oldImageUrl) {
+            try {
+              // Tách filename từ URL
+              const oldFilename = oldImageUrl.split('/').pop();
+
+              // Gọi API xóa ảnh
+              const deleteResponse = await fetch(`/api/upload/${oldFilename}`, {
+                method: 'DELETE'
+              });
+
+              if (!deleteResponse.ok) {
+                console.warn('Không thể xóa ảnh cũ');
+              }
+            } catch (deleteError) {
+              console.error('Lỗi khi xóa ảnh cũ:', deleteError);
+            }
+          }
         } else {
           console.error('Upload failed:', result.message);
         }
